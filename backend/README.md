@@ -1,6 +1,49 @@
 # VetMy Homes
 
-VetMy Homes is an AI-powered multi-agent system that generates unbiased home reports using public data. It already leverages CrewAI for orchestrating a “team” of specialized agents (Crime Stats, School Ratings, Geology/Hazards, Walkability/Amenities) and a CopilotKit front-end for a chatbot-style UI. 
+VetMy Homes is an AI-powered multi-agent system that generates unbiased home reports using public data. It already leverages CrewAI for orchestrating a "team" of specialized agents (Crime Stats, School Ratings, Geology/Hazards, Walkability/Amenities) and a CopilotKit front-end for a chatbot-style UI. 
+
+## Setup
+
+### Prerequisites
+- Python 3.10+ installed
+- uv package manager installed (`pip install uv`)
+
+### Environment Setup
+1. Create a virtual environment:
+```bash
+cd backend
+uv venv .venv
+```
+
+2. Activate the virtual environment:
+```bash
+source .venv/bin/activate  # On Unix/macOS
+# OR
+.venv\Scripts\activate  # On Windows
+```
+
+3. Install dependencies:
+```bash
+uv pip install -r requirements.txt
+```
+
+4. Environment Variables:
+Copy `.env.example` to `.env` and update with your API keys:
+```bash
+cp .env.example .env
+```
+
+### Running the API
+Start the API server:
+```bash
+python main.py
+```
+
+The API will be available at http://localhost:8000
+
+API documentation is available at:
+- http://localhost:8000/docs (Swagger UI)
+- http://localhost:8000/redoc (ReDoc)
 
 ## Features
 
@@ -53,6 +96,163 @@ https://www.seattle.gov/police/information-and-data/data/public-data-sets#:~:tex
 https://www.crimeometer.com/pricing
 
 #### Geology
+
+
+
+
+
+
+
+# VetMyHomes Backend
+
+## Installation and Setup Instructions
+
+### Prerequisites
+
+- Python 3.10-3.12 (CrewAI is not yet compatible with Python 3.13)
+- [uv](https://github.com/astral-sh/uv) package manager
+
+### Setup
+
+1. Install uv if not already installed:
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+2. Install CrewAI as a uv tool:
+```bash
+uv tool install crewai
+```
+
+3. Create a virtual environment:
+```bash
+uv venv .venv
+```
+
+4. Activate the virtual environment:
+```bash
+source .venv/bin/activate  # On Unix/macOS
+# OR
+.venv\Scripts\activate  # On Windows
+```
+
+5. Install other dependencies:
+```bash
+uv pip install -r requirements.txt
+```
+
+6. Test dependencies:
+```bash
+python test_deps.py
+```
+
+## Environment Variables
+
+Create a `.env` file based on `.env.example` and fill in your API keys and configuration.
+
+## Running the API
+
+```bash
+python main.py
+```
+
+Alternatively:
+
+```bash
+uvicorn main:app --reload
+```
+
+The API will be available at http://localhost:8000
+
+## API Documentation
+
+- Interactive API docs: http://localhost:8000/docs
+- Alternative API docs: http://localhost:8000/redoc
+
+## Realtor.com API Integration
+
+This project includes a comprehensive integration with the Realtor.com API via RapidAPI, providing access to property listings, agent details, and more.
+
+### Setup Instructions
+
+1. **Clone the repository**
+
+2. **Set up a virtual environment**
+   ```bash
+   cd backend
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
+
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set up environment variables**
+   - Copy the `.env.example` file to `.env`
+   - Get your RapidAPI key from [RapidAPI Realtor16](https://rapidapi.com/s.mahmoud97/api/realtor16)
+   - Add your RapidAPI key to the `.env` file
+
+5. **Run the application**
+   ```bash
+   python main.py
+   ```
+
+6. **Access the API documentation**
+   - Open your browser and go to `http://localhost:8000/docs`
+
+### Available Endpoints
+
+The Realtor API integration provides the following endpoints:
+
+#### For Sale Listings
+- `GET /realtor/search/forsale` - Search for properties for sale by location
+- `GET /realtor/search/forsale/coordinates` - Search for properties for sale by coordinates
+
+#### For Rent Listings
+- `GET /realtor/search/forrent` - Search for rental properties by location
+
+#### For Sold Listings
+- `GET /realtor/search/forsold` - Search for sold properties by location
+
+#### Suggestions
+- `GET /realtor/suggestion` - Get location suggestions for autocomplete
+
+#### Agent Endpoints
+- `GET /realtor/agent/search` - Search for real estate agents
+- `GET /realtor/agent/profile` - Get agent profile details
+- `GET /realtor/agent/reviews` - Get agent reviews
+- `GET /realtor/agent/listings` - Get agent listings
+
+#### Property Endpoints
+- `GET /realtor/property/details` - Get property details
+- `GET /realtor/property/photos` - Get property photos
+- `GET /realtor/property/environment_risk` - Get property environmental risk data
+- `GET /realtor/property/similar_homes` - Get similar homes
+
+#### Housing Market
+- `GET /realtor/housing_market_details` - Get housing market details
+
+### Example Usage
+
+#### Search for properties in New York
+```python
+import requests
+
+response = requests.get(
+    "http://localhost:8000/realtor/search/forsale",
+    params={
+        "location": "New York, NY",
+        "limit": 10,
+        "page": 1
+    }
+)
+
+properties = response.json()
+```
+
+For detailed documentation on all endpoints and parameters, refer to the OpenAPI documentation at `http://localhost:8000/docs`.
 
 
 

@@ -1,12 +1,7 @@
-# Environment variables
-.env
-.env.*
-!.env.example
-
-# Python virtual environment
+# Virtual environment
 .venv/
 venv/
-ENV/
+env/
 
 # Python cache files
 __pycache__/
@@ -14,30 +9,30 @@ __pycache__/
 *$py.class
 *.so
 .Python
-
-# Distribution / packaging
-dist/
 build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
 *.egg-info/
+.installed.cfg
+*.egg
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
+# Environment variables
+.env
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# VS Code
-.vscode/
-
-# PyCharm
+# IDE files
 .idea/
+.vscode/
+*.swp
+*.swo
 
-# Mac OS
-.DS_Store 
+# OS-specific files
+.DS_Store
+Thumbs.db 
