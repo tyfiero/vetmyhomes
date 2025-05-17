@@ -5,6 +5,7 @@ from fastapi import BackgroundTasks, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl
 from realtor_router import router as realtor_router
+from crews.test_crew.crew_manager import kickoff_crew
 
 app = FastAPI(
     title="VetMyHomes API",
@@ -57,6 +58,11 @@ async def test_dependencies():
         "crewai": "installed",
         "langchain_openai": "installed",
     }
+
+
+@app.post("/crew")
+async def crew():
+    return kickoff_crew({"topic": "AI"})
 
 
 @app.post("/extract-property")
