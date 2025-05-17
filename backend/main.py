@@ -15,8 +15,6 @@ from copilotkit import CopilotKitRemoteEndpoint, Action as CopilotAction
 from copilotkit.crewai import CrewAIAgent
 from agentic_chat_flow import AgenticChatFlow
 
-from crews.test_crew.crew_manager import kickoff_crew
-
 app = FastAPI(
     title="VetMyHomes API",
     description="API for VetMyHomes, providing real estate data using Realtor.com API",
