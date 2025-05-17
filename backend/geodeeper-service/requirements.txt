@@ -2,4 +2,3 @@ fastapi
 uvicorn[standard]
 httpx
 pandas
-crewai
