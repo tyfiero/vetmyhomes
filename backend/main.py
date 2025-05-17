@@ -5,7 +5,7 @@ from fastapi import BackgroundTasks, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl
 from realtor_router import router as realtor_router
-from crews.test_crew.crew_manager import kickoff_crew
+from crews.research_crew.crew_manager import kickoff_crew
 
 app = FastAPI(
     title="VetMyHomes API",
@@ -62,7 +62,11 @@ async def test_dependencies():
 
 @app.post("/crew")
 async def crew():
-    return kickoff_crew({"topic": "AI"})
+    return kickoff_crew(
+        {
+            "query": "Find me 3-bedroom houses for sale in San Francisco under $1.5 million"
+        }
+    )
 
 
 @app.post("/extract-property")

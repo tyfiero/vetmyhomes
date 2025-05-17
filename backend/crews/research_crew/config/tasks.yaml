@@ -1,0 +1,46 @@
+# src/research_crew/config/tasks.yaml
+property_search_task:
+  description: >
+    Analyze the user query: "{query}" and extract key information about the property search request.
+    First, determine what the user is looking for:
+    - Is the user looking for properties for sale, for rent, or recently sold?
+    - What location is the user interested in?
+    - Are there any specific property types mentioned (house, condo, apartment)?
+    - Is there a price range mentioned or implied?
+    - Are there any bedroom or bathroom requirements?
+    - Are there any special features requested?
+
+    Then, use the appropriate realtor tools to search for properties that match these criteria.
+    For each property found, collect the following information:
+    - Property address and basic details
+    - Price and key features
+    - Photos (if available)
+    - Agent information
+    - Environmental risks (if available)
+    - Similar properties in the area
+    - Market trends for the neighborhood
+
+    If the query is ambiguous, focus on the most likely interpretation and provide the most relevant results.
+  expected_output: >
+    A comprehensive list of properties that match the search criteria extracted from the user query,
+    with each property containing detailed information including address, price, features, photos,
+    agent details, and environmental considerations. The list should be well-structured and include
+    a summary of market trends for the specified location.
+  agent: property_search
+  output_file: output/property_list.json
+
+render_report:
+  description: >
+    Analyze the property list and create a comprehensive report on the properties.
+    Your report should:
+    1. Begin with an executive summary
+    2. Include all key information from the property list
+    3. Provide insightful analysis of trends and patterns
+    4. Offer recommendations or future considerations
+    5. Be formatted in a professional, easy-to-read style with clear headings
+  expected_output: >
+    A formatted list of properties that match the search criteria extracted from the user query.
+
+  agent: property_search
+  context:
+    - property_search_task
