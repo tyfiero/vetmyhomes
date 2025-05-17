@@ -2,9 +2,27 @@ from typing import Any, Dict, Optional
 
 import uvicorn
 from fastapi import BackgroundTasks, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl
+from realtor_router import router as realtor_router
 
-app = FastAPI(title="VetMyHomes API")
+app = FastAPI(
+    title="VetMyHomes API",
+    description="API for VetMyHomes, providing real estate data using Realtor.com API",
+    version="0.1.0",
+)
+
+# Set up CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Adjust this for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include routers
+app.include_router(realtor_router)
 
 
 class PropertyUrlRequest(BaseModel):
@@ -26,7 +44,8 @@ class PropertyDataRequest(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"message": "VetMyHomes API is running"}
+    """Health check endpoint"""
+    return {"status": "ok", "message": "VetMyHomes API is running"}
 
 
 @app.get("/test-deps")
