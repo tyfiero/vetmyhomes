@@ -5,9 +5,12 @@ from fastapi import APIRouter, BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl
 from realtor_router import router as realtor_router
+from crews.research_crew.crew_manager import kickoff_crew
+
 # Import CopilotKit FastAPI integration
 from copilotkit.integrations.fastapi import add_fastapi_endpoint
 from copilotkit import CopilotKitRemoteEndpoint, Action as CopilotAction
+
 # Keep the other imports for AgenticChatFlow if we want to use it later
 from copilotkit.crewai import CrewAIAgent
 from agentic_chat_flow import AgenticChatFlow
@@ -41,6 +44,7 @@ sdk = CopilotKitRemoteEndpoint(
     ],
 )
 add_fastapi_endpoint(app, sdk, "/copilotkit")
+
 
 class PropertyUrlRequest(BaseModel):
     url: HttpUrl
@@ -78,7 +82,11 @@ async def test_dependencies():
 
 @app.post("/crew")
 async def crew():
-    return kickoff_crew({"topic": "AI"})
+    return kickoff_crew(
+        {
+            "query": "Find me 3-bedroom houses for sale in San Francisco under $1.5 million"
+        }
+    )
 
 
 @app.post("/extract-property")
