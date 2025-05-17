@@ -105,6 +105,70 @@ https://www.crimeometer.com/pricing
 
 # VetMyHomes Backend
 
+## Installation and Setup Instructions
+
+### Prerequisites
+
+- Python 3.10-3.12 (CrewAI is not yet compatible with Python 3.13)
+- [uv](https://github.com/astral-sh/uv) package manager
+
+### Setup
+
+1. Install uv if not already installed:
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+2. Install CrewAI as a uv tool:
+```bash
+uv tool install crewai
+```
+
+3. Create a virtual environment:
+```bash
+uv venv .venv
+```
+
+4. Activate the virtual environment:
+```bash
+source .venv/bin/activate  # On Unix/macOS
+# OR
+.venv\Scripts\activate  # On Windows
+```
+
+5. Install other dependencies:
+```bash
+uv pip install -r requirements.txt
+```
+
+6. Test dependencies:
+```bash
+python test_deps.py
+```
+
+## Environment Variables
+
+Create a `.env` file based on `.env.example` and fill in your API keys and configuration.
+
+## Running the API
+
+```bash
+python main.py
+```
+
+Alternatively:
+
+```bash
+uvicorn main:app --reload
+```
+
+The API will be available at http://localhost:8000
+
+## API Documentation
+
+- Interactive API docs: http://localhost:8000/docs
+- Alternative API docs: http://localhost:8000/redoc
+
 ## Realtor.com API Integration
 
 This project includes a comprehensive integration with the Realtor.com API via RapidAPI, providing access to property listings, agent details, and more.
