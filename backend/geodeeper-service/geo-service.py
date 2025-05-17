@@ -37,8 +37,10 @@ async def get_tract_fips_from_address(address: str) -> dict:
             response = await client.get(GEO_API_URL, params=params)
             response.raise_for_status()
             data = response.json()
+        print('data', data)
         match = data["result"]["addressMatches"][0]
-        tract_fips = match["geographies"]["Census Block Groups"][0]["TRACT"]
+        geoid = match["geographies"]["Census Block Groups"][0]["GEOID"]
+        tract_fips = geoid[:11]  # First 11 digits are the full tract FIPS
         return {"tract_fips": tract_fips}
     except (IndexError, KeyError):
         return {"error": "Could not extract tract FIPS from address, merp merp"}
@@ -83,9 +85,8 @@ async def get_long_lat_from_address(address: str) -> Dict[str, Any]:
         return {"error": str(e)}
     
 
-
 # Get an overview of risks for a given tract from the local data
-async def get_tract_risks(params: Dict[str, Any]) -> Dict[str, Any]:
+async def get_tract_risks_overview(params: Dict[str, Any]) -> Dict[str, Any]:
     """
     Async tool to get an overview of risks for a given tract.
     Args:
@@ -128,6 +129,6 @@ if __name__ == "__main__":
 
     tract_fips = asyncio.run(get_tract_fips_from_address(ADDRESS))
     risks = asyncio.run(get_tract_risks({"tract": tract_fips["tract_fips"]}))
-    print(risks)
+    print('risks', risks)
 
     # print(tract_data.columns)
