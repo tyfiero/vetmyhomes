@@ -1,10 +1,18 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 
 import uvicorn
-from fastapi import BackgroundTasks, FastAPI
+from fastapi import APIRouter, BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl
 from realtor_router import router as realtor_router
+# Import CopilotKit FastAPI integration
+from copilotkit.integrations.fastapi import add_fastapi_endpoint
+from copilotkit import CopilotKitRemoteEndpoint, Action as CopilotAction
+# Keep the other imports for AgenticChatFlow if we want to use it later
+from copilotkit.crewai import CrewAIAgent
+from agentic_chat_flow import AgenticChatFlow
+
+from crews.test_crew.crew_manager import kickoff_crew
 
 app = FastAPI(
     title="VetMyHomes API",
@@ -23,7 +31,16 @@ app.add_middleware(
 
 # Include routers
 app.include_router(realtor_router)
-
+sdk = CopilotKitRemoteEndpoint(
+    agents=[
+        CrewAIAgent(
+            name="sample_agent",
+            description="An example agent to use as a starting point for your own agent.",
+            flow=AgenticChatFlow(),
+        )
+    ],
+)
+add_fastapi_endpoint(app, sdk, "/copilotkit")
 
 class PropertyUrlRequest(BaseModel):
     url: HttpUrl
@@ -57,6 +74,11 @@ async def test_dependencies():
         "crewai": "installed",
         "langchain_openai": "installed",
     }
+
+
+@app.post("/crew")
+async def crew():
+    return kickoff_crew({"topic": "AI"})
 
 
 @app.post("/extract-property")
