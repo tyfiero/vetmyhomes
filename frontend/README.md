@@ -10,7 +10,11 @@ VetMy Homes is an AI-powered multi-agent system that generates unbiased home rep
 npm install
 npm run dev
 ```
+Make a new account on CopilotKit and add the following to your `.env` file:
+NEXT_PUBLIC_COPILOTKIT_PUBLIC_API_KEY=YOUR_KEY
 
+
+In CopilotKit cloud, you'll need to go to 
 
 ## Features
 
