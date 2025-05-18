@@ -189,8 +189,8 @@ export function CopilotChatComponent() {
 				<div className="w-full ">
 					{/* State received: {JSON.stringify(state)}
 					 */}
-					{/* {PROPERTIES && PROPERTIES.properties.length > 0 && ( */}
-					{state?.properties && state.properties.length > 0 && (
+					{PROPERTIES && PROPERTIES.properties.length > 0 && (
+						// {state?.properties && state.properties.length > 0 && (
 						<div className="mb-6 p-4 bg-white/30 rounded-lg shadow w-full">
 							<h2 className="text-xl font-semibold text-sky-700 mb-2">
 								Found a few properties:

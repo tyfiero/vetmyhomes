@@ -3,6 +3,7 @@ import type {
 	EnvironmentalRisks,
 	EnvironmentalRiskDetail,
 	EnvironmentalRiskItem,
+	PropertyDetail,
 } from "../types";
 
 const getDominantRiskLevel = (risks: EnvironmentalRisks): string => {
@@ -14,7 +15,7 @@ const getDominantRiskLevel = (risks: EnvironmentalRisks): string => {
 	return "N/A";
 };
 
-const PropertyCard = ({ property }) => {
+const PropertyCard = ({ property }: { property: PropertyDetail }) => {
 	const [imageError, setImageError] = useState(false);
 
 	const formatPrice = (price: number) => {
