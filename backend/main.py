@@ -1,24 +1,16 @@
 from typing import Any, Dict, Optional
-
-import uvicorn
-from copilotkit import CopilotKitRemoteEndpoint
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
-
-# Keep the other imports for AgenticChatFlow if we want to use it later
 from copilotkit.crewai import CrewAIAgent
+from copilotkit.integrations.fastapi import add_fastapi_endpoint
+from copilotkit import CopilotKitRemoteEndpoint
 
 # Import CopilotKit FastAPI integration
-from copilotkit.integrations.fastapi import add_fastapi_endpoint
 from crews.research_crew.crew_manager import ResearchCrew, kickoff_crew
 import os
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi import APIRouter
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, HttpUrl, Field
 from realtor_router import router as realtor_router
 
 app = FastAPI(
@@ -73,7 +65,7 @@ sdk = CopilotKitRemoteEndpoint(
         )
     ],
 )
-add_fastapi_endpoint(app, sdk, "/copilotkit_remote")
+add_fastapi_endpoint(app, sdk, "/copilotkit")
 
 
 class PropertyUrlRequest(BaseModel):
@@ -88,6 +80,10 @@ class PropertyDataRequest(BaseModel):
     bathrooms: Optional[float] = None
     square_feet: Optional[int] = None
     year_built: Optional[int] = None
+
+
+class ChatRequest(BaseModel):
+    query: str = Field(..., description="The user's query or address to analyze")
     lot_size: Optional[float] = None
     property_type: Optional[str] = None
     additional_data: Optional[Dict[str, Any]] = None
@@ -102,20 +98,22 @@ async def root():
 @app.api_route("/info", methods=["GET", "POST"])
 async def info():
     """Get API information"""
-    return JSONResponse({
-        "name": "VetMyHomes API",
-        "version": "0.1.0",
-        "description": "API for analyzing real estate properties and environmental risks",
-        "endpoints": {
-            "/": "Health check endpoint",
-            "/info": "Get API information",
-            "/test-deps": "Test dependencies status",
-            "/crew": "Run property analysis crew",
-            "/extract-property": "Extract property data from URL",
-            "/analyze-property": "Analyze property data",
-            "/maps/{filename}": "Get property map images"
+    return JSONResponse(
+        {
+            "name": "VetMyHomes API",
+            "version": "0.1.0",
+            "description": "API for analyzing real estate properties and environmental risks",
+            "endpoints": {
+                "/": "Health check endpoint",
+                "/info": "Get API information",
+                "/test-deps": "Test dependencies status",
+                "/crew": "Run property analysis crew",
+                "/extract-property": "Extract property data from URL",
+                "/analyze-property": "Analyze property data",
+                "/maps/{filename}": "Get property map images",
+            },
         }
-    })
+    )
 
 
 @app.get("/test-deps")
@@ -144,6 +142,18 @@ async def crew():
     #     "longitude": -122.3295,
     # }
     # )
+
+
+@app.post("/chat")
+async def chat(request: ChatRequest):
+    """Process a chat request with a query
+
+    The query can be a natural language question about real estate,
+    a specific address to analyze, or a neighborhood to search in.
+    """
+    res = kickoff_crew({"query": request.query})
+    json_res = res.json_dict
+    return json_res
 
 
 @app.post("/extract-property")
