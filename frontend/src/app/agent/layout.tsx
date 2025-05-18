@@ -7,7 +7,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 		<div className="h-full w-full" suppressHydrationWarning>
 			<CopilotKit
 				agent="real_estate_agent" // lock the agent to the sample_agent since we only have one agent
-				publicApiKey="ck_pub_a6a2225e8f158a06eb6d210ede15c8d8"
+				publicApiKey={process.env.NEXT_PUBLIC_COPILOTKIT_PUBLIC_API_KEY}
 				// runtimeUrl="/api/copilotkit"
 				showDevConsole={false}
 			>
