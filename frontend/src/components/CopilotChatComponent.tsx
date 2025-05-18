@@ -1,7 +1,6 @@
 import React from "react";
 import { CopilotChat } from "@copilotkit/react-ui";
 // import type { Message as CopilotMessageType } from "@copilotkit/react-core"; // Attempted this, but still faced linter issues.
-import { useEffect, useState } from "react";
 import {
 	useCoAgentStateRender,
 	useCopilotAction,
@@ -30,13 +29,6 @@ interface ActionExecutionMessage extends BaseMessage {
 		query?: string;
 		[key: string]: unknown;
 	};
-}
-
-// Type guard function to check if a message is an ActionExecutionMessage
-function isActionExecutionMessage(
-	message: CopilotMessage,
-): message is ActionExecutionMessage {
-	return message.type === "ActionExecutionMessage";
 }
 
 // A union type for all possible message types
@@ -146,6 +138,7 @@ export interface CopilotMessageRenderProps {
 export function CopilotChatComponent() {
 	useCopilotAction({
 		name: "*",
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		render: ({ args, name, status }: any) => {
 			console.log("Action received:", args, name, status);
 			return (

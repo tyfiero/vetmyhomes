@@ -11,7 +11,7 @@ export default function Navbar() {
 			</Link>
 			<div className="flex items-center">
 				<Link
-					href="/agent"
+					href="/simple"
 					className="text-sm text-gray-300 hover:text-white mr-4"
 				>
 					App

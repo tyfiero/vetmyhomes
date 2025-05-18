@@ -133,8 +133,8 @@ export default function SimplePage() {
 			{!isLoading && properties && properties.length === 0 && !error && (
 				<div className="mt-6 max-w-2xl mx-auto p-4 bg-slate-700/70 text-slate-300 rounded-md shadow-lg text-center">
 					<p>
-						No properties found for your query, or the assistant didn't return
-						any.
+						No properties found for your query, or the assistant didn&apos;t
+						return any.
 					</p>
 				</div>
 			)}

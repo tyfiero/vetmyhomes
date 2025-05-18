@@ -1,92 +1,65 @@
 "use client";
 
 import React from "react";
-import type { ReactNode } from "react";
-import { useCoAgent, useCoAgentStateRender } from "@copilotkit/react-core";
-import { useState } from "react";
+// import type { ReactNode } from "react";
+// import { useCoAgent, useCoAgentStateRender } from "@copilotkit/react-core";
+// import { useState } from "react";
 import { CopilotChatComponent } from "@/components/CopilotChatComponent";
-import PropertyCard from "../../components/PropertyCard";
-import { PROPERTIES, type AgentState, type PropertyDetail } from "../../types";
+// import PropertyCard from "../../components/PropertyCard";
+// import { PROPERTIES, type AgentState, type PropertyDetail } from "../../types";
 
 // Define the detailed structure of a property
 // type PropertyDetail = {
-// 	address: string;
-// 	price: number;
-// 	bedrooms: number;
-// 	bathrooms: number;
-// 	sqft: number;
-// 	agent: string;
-// 	agent_phone: string;
-// 	agent_email: string;
-// 	environmental_risk: string;
-// 	photos: string[];
+// \taddress: string;
+// \tprice: number;
+// \tbedrooms: number;
+// \tbathrooms: number;
+// \tsqft: number;
+// \tagent: string;
+// \tagent_phone: string;
+// \tagent_email: string;
+// \tenvironmental_risk: string;
+// \tphotos: string[];
 // };
 
-// State of the agent, make sure this aligns with your agent's state.
+// State of the agent, make sure this aligns with your agent\'s state.
 // type AgentState = {
-// 	properties: PropertyDetail[];
-// 	outputs?: string;
+// \tproperties: PropertyDetail[];
+// \toutputs?: string;
 // };
 
 // Create a more user-friendly state renderer component
 // const RealEstateStateRenderer = ({
-// 	state,
-// 	status,
+// \tstate,
+// \tstatus,
 // }: { state: AgentState | null; status: string }) => {
-// 	// if (!state) return null;
-// 	console.log("state", state);
-// 	console.log("status", status);
+// \t// if (!state) return null;
+// \tconsole.log("state", state);
+// \tconsole.log("status", status);
 
-// 	// // Get property count from outputs if properties array is empty
-// 	// const getPropertyCount = () => {
-// 	// 	if (state.properties && state.properties.length > 0) {
-// 	// 		return state.properties.length;
-// 	// 	}
-
-// 	// 	// Try to extract property count from outputs if it contains JSON
-// 	// 	if (state.outputs?.includes('"properties":')) {
-// 	// 		const match = state.outputs.match(/"properties":\s*\[\s*({[^}]+})/);
-// 	// 		if (match) return "found properties";
-// 	// 	}
-
-// 	// 	return null;
-// 	// };
-
-// 	// // Show different messages based on status
-// 	// const getStatusMessage = () => {
-// 	// 	if (status === "pending") return "Searching for properties...";
-// 	// 	if (status === "success") {
-// 	// 		const count = getPropertyCount();
-// 	// 		return count
-// 	// 			? `Found ${count}`
-// 	// 			: "Found properties matching your criteria";
-// 	// 	}
-// 	// 	if (status === "error") return "Error finding properties";
-// 	// 	return "Processing your request...";
-// 	// };
-
-// 	return (
-// 		<div className="w-full bg-red-500">
-// 			adsfasdf
-// 			{PROPERTIES && PROPERTIES.properties.length > 0 && (
-// 				// {state?.properties && state.properties.length > 0 && (
-// 				<div className="mb-6 p-4 bg-white/30 rounded-lg shadow">
-// 					<h2 className="text-xl font-semibold text-white mb-2">
-// 						Found a few properties:
-// 					</h2>
-// 					<ul className="text-white/90 ml-4 list-disc">
-// 						{PROPERTIES.properties.map((property, index) => (
-// 							<PropertyCard
-// 								key={property.address || `property-${index}`}
-// 								property={property}
-// 							/>
-// 						))}
-// 					</ul>
-// 				</div>
-// 			)}
-// 		</div>
-// 	);
-// };
+// \t// // Get property count from outputs if properties array is empty
+// \t// const getPropertyCount = () => {
+// \t// \tif (state.properties && state.properties.length > 0) {
+// \t// \t\treturn state.properties.length;
+// \t// \t}\n\n// \t// \t// Try to extract property count from outputs if it contains JSON
+// \t// \tif (state.outputs?.includes(\'\\"properties\\":\')) {
+// \t// \t\tconst match = state.outputs.match(/\\"properties\\":\\s*\\[\\s*({[^}]+})/);\n// \t// \t\tif (match) return "found properties";
+// \t// \t}\n\n// \t// \treturn null;\n// \t// };\n\n// \t// // Show different messages based on status
+// \t// const getStatusMessage = () => {
+// \t// \tif (status === "pending") return "Searching for properties...";
+// \t// \tif (status === "success") {
+// \t// \t\tconst count = getPropertyCount();
+// \t// \t\treturn count
+// \t// \t\t\t? `Found ${count}`
+// \t// \t\t\t: "Found properties matching your criteria";
+// \t// \t}\n// \t// \tif (status === "error") return "Error finding properties";
+// \t// \treturn "Processing your request...";
+// \t// };\n\n// \treturn (\n// \t\t<div className="w-full bg-red-500">\n// \t\t\tadsfasdf
+// \t\t\t{PROPERTIES && PROPERTIES.properties.length > 0 && (
+// \t\t\t\t// {state?.properties && state.properties.length > 0 && (\n// \t\t\t\t<div className="mb-6 p-4 bg-white/30 rounded-lg shadow">\n// \t\t\t\t\t<h2 className="text-xl font-semibold text-white mb-2">\n// \t\t\t\t\t\tFound a few properties:\n// \t\t\t\t\t</h2>\n// \t\t\t\t\t<ul className="text-white/90 ml-4 list-disc">\n// \t\t\t\t\t\t{PROPERTIES.properties.map((property, index) => (\n// \t\t\t\t\t\t\t<PropertyCard
+// \t\t\t\t\t\t\t\tkey={property.address || `property-${index}`}
+// \t\t\t\t\t\t\t\tproperty={property}
+// \t\t\t\t\t\t\t/>\n// \t\t\t\t\t\t))}\n// \t\t\t\t\t</ul>\n// \t\t\t\t</div>\n// \t\t\t)}\n// \t\t</div>\n// \t);\n// };
 
 export default function CopilotKitPage() {
 	// const [themeColor] = useState("#a4c1ff");
