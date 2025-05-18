@@ -21,7 +21,7 @@ export default function SimplePage() {
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ input: inputValue }),
+				body: JSON.stringify({ query: inputValue }),
 			});
 
 			if (!response.ok) {
