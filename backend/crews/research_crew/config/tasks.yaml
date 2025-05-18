@@ -20,6 +20,18 @@ property_search_task:
     A well-structured list of property listings, each with rich metadata.
   agent: property_search
 
+lifestyle_filter_task:
+  description: >
+    If the user's query includes lifestyle preferences (e.g., gym, nightlife, restaurants), use the get_nearby_places tool to find those amenities around each property.
+    Use the tool to find only the types of amenities the user asked for.
+    This helps prioritize or annotate listings with nearby lifestyle conveniences.
+  expected_output: >
+    A mapping of properties to their surrounding lifestyle amenities.
+  agent: lifestyle_filter
+  context:
+    - property_search_task
+
+
 render_report:
   description: >
     Analyze the property list and create json object with property list
@@ -50,17 +62,19 @@ render_report:
   output_file: output/property_list.json
   context:
     - property_search_task
-
+    - lifestyle_filter_task
 
 summarize_properties_task:
   description: >
-    Create a short, natural markdown 3-5 line summary based on the property and WalkScore data provided.
-    No need to list every property — just highlight interesting trends, standout homes, or neighborhoods.
-    Mention things like walkability, transit, lifestyle convenience, and anything that stands out.
-    Keep it friendly, simple, and readable. Add images if available, and end with a quick suggestion or comparison.
+    Write a short 3–5 line markdown summary based only on what the user was looking for and what the data showed.
+    Skip generic observations.
+    Mention lifestyle factors like gyms, transit, or walkability *only if the user asked for them* and data supports it.
+    Keep it casual, honest, direct and clear — like you’re giving a quick recommendation.
   expected_output: >
-    A human-sounding markdown summary with insights — no property-by-property breakdown.
+    A markdown summary that is simple, specific, and free of generic AI tone.
+    Avoid listing every property. Focus on user interests and what’s actually notable.
   agent: summarizer
+  output_file: output/property_summary.md
   context:
     - property_search_task
-  output_file: output/property_summary.md
+    - lifestyle_filter_task
