@@ -39,13 +39,21 @@ class ResearchCrew:
             verbose=True,
         )
 
+    @agent
+    def summarizer(self) -> Agent:
+        return Agent(config=self.agents_config["summarizer"])
+
     @task
     def property_search_task(self) -> Task:
         return Task(config=self.tasks_config["property_search_task"])  # type: ignore[index]
 
     @task
     def render_report(self) -> Task:
-        return Task(config=self.tasks_config["render_report"], output_json=PropertyList)  # type: ignore[index]
+        return Task(config=self.tasks_config["render_report"], output_json=PropertyList)
+    
+    @task
+    def summarize_properties_task(self) -> Task:
+        return Task(config=self.tasks_config["summarize_properties_task"])
 
     # @task
     # def walkscore_task(self) -> Task:

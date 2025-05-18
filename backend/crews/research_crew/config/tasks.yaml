@@ -50,3 +50,17 @@ render_report:
   output_file: output/property_list.json
   context:
     - property_search_task
+
+
+summarize_properties_task:
+  description: >
+    Create a short, natural markdown 3-5 line summary based on the property and WalkScore data provided.
+    No need to list every property — just highlight interesting trends, standout homes, or neighborhoods.
+    Mention things like walkability, transit, lifestyle convenience, and anything that stands out.
+    Keep it friendly, simple, and readable. Add images if available, and end with a quick suggestion or comparison.
+  expected_output: >
+    A human-sounding markdown summary with insights — no property-by-property breakdown.
+  agent: summarizer
+  context:
+    - property_search_task
+  output_file: output/property_summary.md
