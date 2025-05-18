@@ -1,25 +1,76 @@
-All right, I've compiled the details of a suitable property from the list that matches the criteria. Here's the structured JSON object of a property with 3 bedrooms, located in Seattle:
-
 ```json
 {
   "properties": [
     {
-      "address": "10821 Glen Acres Dr S Apt C, Seattle, WA 98168",
-      "price": 285000,
-      "bedrooms": 3,
+      "address": "732 Poplar St, Denver, CO 80220",
+      "price": 489900,
+      "bedrooms": 4,
       "bathrooms": 2,
-      "sqft": 1333,
-      "agent": "Windermere Real Estate East",
+      "sqft": 1544,
+      "agent": "Brokers Guild Real Estate",
       "agent_phone": null,
       "agent_email": null,
       "environmental_risk": "low",
       "photos": [
-        "https://ap.rdcpix.com/a8e88d403091c0d2492b926c93103355l-m2842784331s.jpg",
-        "https://ap.rdcpix.com/a8e88d403091c0d2492b926c93103355l-m1175271785s.jpg"
+        "https://ap.rdcpix.com/3f7f5f4455af83dd9408124c43506214l-m617701630s.jpg"
+      ]
+    },
+    {
+      "address": "2715 W 37th Ave, Denver, CO 80211",
+      "price": 1285000,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "sqft": 3138,
+      "agent": "Milehimodern",
+      "agent_phone": null,
+      "agent_email": null,
+      "environmental_risk": "low",
+      "photos": [
+        "https://ap.rdcpix.com/b434ce2da0968280fc13e05f20891b01l-m3220340545s.jpg"
+      ]
+    },
+    {
+      "address": "449 S Humboldt St, Denver, CO 80209",
+      "price": 2100000,
+      "bedrooms": 4,
+      "bathrooms": 3.5,
+      "sqft": 3085,
+      "agent": "Compass - Denver",
+      "agent_phone": null,
+      "agent_email": null,
+      "environmental_risk": "low",
+      "photos": [
+        "https://ap.rdcpix.com/16ae39b6b9cc1c84c4db416fc4333530l-m4072735362s.jpg"
+      ]
+    },
+    {
+      "address": "2545 S Lowell Blvd, Denver, CO 80219",
+      "price": 750000,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "sqft": 1362,
+      "agent": "Realty One Group Premier Colorado",
+      "agent_phone": null,
+      "agent_email": null,
+      "environmental_risk": "low",
+      "photos": [
+        "https://ap.rdcpix.com/e07ebb3f2758091cae7c7f2a1d3e9b5cl-m2578767270s.jpg"
+      ]
+    },
+    {
+      "address": "1176 Gaylord St Apt 101, Denver, CO 80206",
+      "price": 475000,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "sqft": 976,
+      "agent": "Worth Clark Realty - Colorado",
+      "agent_phone": null,
+      "agent_email": null,
+      "environmental_risk": "low",
+      "photos": [
+        "https://ap.rdcpix.com/d8da14d60092b4e151b9bd85a622d515l-m4277297552s.jpg"
       ]
     }
   ]
 }
 ```
-
-This property fits within your specified budget and is located in Seattle with the required number of bedrooms. However, detailed contact info for the agent was not available in this data. If you require any further assistance or details, feel free to ask!

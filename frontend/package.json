@@ -12,6 +12,7 @@
     "@copilotkit/react-core": "^1.8.12",
     "@copilotkit/react-ui": "^1.8.12",
     "@copilotkit/runtime": "^1.8.12",
+    "@radix-ui/react-slot": "^1.2.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.511.0",

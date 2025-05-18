@@ -18,7 +18,6 @@ property_search_task:
     If the query is ambiguous, ask the user for clarification.
   expected_output: >
     A well-structured list of property listings, each with rich metadata.
-    For selected listings, include a formatted section summarizing Walk Score data.
   agent: property_search
 
 render_report:
@@ -47,7 +46,7 @@ render_report:
       ]
     }
 
-  agent: property_search
+  agent: output_agent
   output_file: output/property_list.json
   context:
     - property_search_task
@@ -71,3 +70,16 @@ geo_analysis:
   expected_output: >
     a JSON object containing the results of the basic check (risk scores) and it should also contain any additional info that was identified as child items
   agent: geodeeper_agent
+
+summarize_properties_task:
+  description: >
+    Create a short, natural markdown 3-5 line summary based on the property and WalkScore data provided.
+    No need to list every property — just highlight interesting trends, standout homes, or neighborhoods.
+    Mention things like walkability, transit, lifestyle convenience, and anything that stands out.
+    Keep it friendly, simple, and readable. Add images if available, and end with a quick suggestion or comparison.
+  expected_output: >
+    A human-sounding markdown summary with insights — no property-by-property breakdown.
+  agent: summarizer
+  context:
+    - property_search_task
+  output_file: output/property_summary.md
