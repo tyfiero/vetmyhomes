@@ -40,12 +40,24 @@ class ResearchCrew:
         )
 
     @agent
+    def lifestyle_filter(self) -> Agent:
+        return Agent(
+            config=self.agents_config["lifestyle_filter"],
+            verbose=True,
+            tools=REALTOR_TOOLS,
+            chat_llm=MODEL,
+        )
+    @agent
     def summarizer(self) -> Agent:
         return Agent(config=self.agents_config["summarizer"])
 
     @task
     def property_search_task(self) -> Task:
         return Task(config=self.tasks_config["property_search_task"])  # type: ignore[index]
+    
+    @task
+    def lifestyle_filter_task(self) -> Task:
+        return Task(config=self.tasks_config["lifestyle_filter_task"])
 
     @task
     def render_report(self) -> Task:

@@ -86,7 +86,7 @@ async def test_dependencies():
 async def crew():
     return kickoff_crew(
         {
-            "query": "Recommend houses in Capitol hill"
+            "query": "Recommend houses near gyms and restaraunts in Capitol hill"
         }
     )
     # return kickoff_crew(
