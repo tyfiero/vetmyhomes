@@ -59,7 +59,7 @@ class ResearchCrew:
 
     @task
     def geo_analysis(self) -> Task:
-        return Task(config=self.tasks_config["geo_analysis"], output_json=EnvironmentalRisks)  # type: ignore[index]
+        return Task(config=self.tasks_config["geo_analysis"])  # type: ignore[index]
 
     @task
     def render_report(self) -> Task:
