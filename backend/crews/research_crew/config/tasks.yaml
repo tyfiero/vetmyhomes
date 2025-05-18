@@ -1,14 +1,11 @@
-# src/research_crew/config/tasks.yaml
 property_search_task:
   description: >
-    Analyze the user query: "{query}" and extract key information about the property search request.
-    First, determine what the user is looking for:
-    - Is the user looking for properties for sale, for rent, or recently sold?
-    - What location is the user interested in?
-    - Are there any specific property types mentioned (house, condo, apartment)?
-    - Is there a price range mentioned or implied?
-    - Are there any bedroom or bathroom requirements?
-    - Are there any special features requested?
+    Analyze the user query: "{query}" and extract key information about the property search request:
+    - Buy, rent, or sold?
+    - Desired location
+    - Property type
+    - Price range
+    - Bedrooms, bathrooms, features
 
     Then, use the appropriate tools to search for properties that match these criteria.
 
@@ -20,10 +17,8 @@ property_search_task:
 
     If the query is ambiguous, ask the user for clarification.
   expected_output: >
-    A comprehensive list of properties that match the search criteria extracted from the user query,
-    with each property containing detailed information including address, price, features, photos,
-    agent details, and environmental considerations. The list should be well-structured and include
-    a summary of market trends for the specified location.
+    A well-structured list of property listings, each with rich metadata.
+    For selected listings, include a formatted section summarizing Walk Score data.
   agent: property_search
 
 render_report:
