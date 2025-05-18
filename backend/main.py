@@ -73,7 +73,7 @@ sdk = CopilotKitRemoteEndpoint(
         )
     ],
 )
-add_fastapi_endpoint(app, sdk, "/copilotkit")
+add_fastapi_endpoint(app, sdk, "/")
 
 
 class PropertyUrlRequest(BaseModel):
