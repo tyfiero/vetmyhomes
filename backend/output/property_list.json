@@ -1,0 +1,30 @@
+```json
+{
+  "properties": [
+    {
+      "address": "2137 E Shelby St, Seattle, WA 98112",
+      "price": 1275000,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "sqft": null,
+      "agent": null,
+      "agent_phone": null,
+      "agent_email": null,
+      "environmental_risk": null,
+      "photos": []
+    },
+    {
+      "address": "101 NE 62nd St, Seattle, WA 98115",
+      "price": 2400000,
+      "bedrooms": 4,
+      "bathrooms": 3.5,
+      "sqft": null,
+      "agent": null,
+      "agent_phone": null,
+      "agent_email": null,
+      "environmental_risk": null,
+      "photos": []
+    }
+  ]
+}
+```

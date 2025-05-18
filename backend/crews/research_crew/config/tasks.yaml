@@ -7,38 +7,47 @@ property_search_task:
     - Price range
     - Bedrooms, bathrooms, features
 
-    Use the realtor tools to search for properties that match the criteria.
-    For each property found, gather:
-    - Address
-    - Latitude and Longitude
-    - Price, bedrooms, bathrooms
-    - Photos (if available)
-    - Agent info
-    - Environmental risk data
-    - Market trends
+    Then, use the appropriate tools to search for properties that match these criteria.
 
-    For the most promising or urban-located properties, call the "get_walkscore" tool
-    using the correct address, latitude, and longitude format.
+    ## Tool instructions
+    - You can combine multiple tools if needed, using the output of one tool as input to another.
+    - Many of the search tools have pagination, so you may need to use multiple tools to get a complete list of properties.
+    - Do not overwhelm the user with too many properties.
+    - Not all tools are necessary, use only the tools that are relevant to the search criteria.
 
-    Include Walk Score, Transit Score, and Bike Score in your final results for those properties.
-
+    If the query is ambiguous, ask the user for clarification.
   expected_output: >
     A well-structured list of property listings, each with rich metadata.
     For selected listings, include a formatted section summarizing Walk Score data.
   agent: property_search
-  output_file: output/property_list_with_walkscore.json
 
 render_report:
   description: >
-    Analyze the enhanced property list and create a final report with summaries and insights.
-    Your report should:
-    1. Begin with an executive summary
-    2. Include all key data from the listings
-    3. Highlight any patterns or market insights
-    4. Recommend top properties based on user preferences
-    5. Be formatted cleanly for readability
+    Analyze the property list and create json object with property list
   expected_output: >
-    A markdown or PDF report summarizing the top real estate findings and mobility scores.
+    A JSON object containing the property list with the following structure:
+    {
+      "properties": [
+        {
+          "address": "123 Main St",
+          "price": 100000,
+          "bedrooms": 3,
+          "bathrooms": 2,
+          "sqft": 1500,
+          "agent": "John Doe",
+          "agent_phone": "555-1234",
+          "agent_email": "john.doe@example.com",
+          "environmental_risk": "low",
+          "photos": [
+            "https://example.com/photo1.jpg",
+            "https://example.com/photo2.jpg",
+            "https://example.com/photo3.jpg"
+          ]
+        }
+      ]
+    }
+
   agent: property_search
+  output_file: output/property_list.json
   context:
     - property_search_task
