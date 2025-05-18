@@ -1,20 +1,22 @@
-from typing import Any, Dict, Optional, List
+from typing import Any, Dict, Optional
 
 import uvicorn
-from fastapi import APIRouter, BackgroundTasks, FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, HttpUrl
-from realtor_router import router as realtor_router
-from crews.research_crew.crew_manager import kickoff_crew, ResearchCrew 
+from copilotkit import CopilotKitRemoteEndpoint
+from dotenv import load_dotenv
 
-# Import CopilotKit FastAPI integration
-from copilotkit.integrations.fastapi import add_fastapi_endpoint
-from copilotkit import CopilotKitRemoteEndpoint, Action as CopilotAction
+# Load environment variables
+load_dotenv()
 
 # Keep the other imports for AgenticChatFlow if we want to use it later
 from copilotkit.crewai import CrewAIAgent
-from agentic_chat_flow import AgenticChatFlow
 
+# Import CopilotKit FastAPI integration
+from copilotkit.integrations.fastapi import add_fastapi_endpoint
+from crews.research_crew.crew_manager import ResearchCrew, kickoff_crew
+from fastapi import BackgroundTasks, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, HttpUrl
+from realtor_router import router as realtor_router
 
 app = FastAPI(
     title="VetMyHomes API",
