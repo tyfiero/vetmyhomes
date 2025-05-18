@@ -597,6 +597,38 @@ class WalkScoreTool(AsyncBaseTool):
         except Exception as e:
             return f"Error fetching WalkScore: {e}"
 
+class GooglePlacesInput(BaseModel):
+    latitude: float = Field(..., description="Latitude of the location")
+    longitude: float = Field(..., description="Longitude of the location")
+    place_type: str = Field(..., description="Type of place (e.g. gym, bar, restaurant)")
+    radius: int = Field(1000, description="Search radius in meters")
+
+class GooglePlacesTool(AsyncBaseTool):
+    name: str = "get_nearby_places"
+    description: str = "Find nearby amenities like gyms, bars, or restaurants for a given location."
+    args_schema: Type[BaseModel] = GooglePlacesInput
+
+    async def run_async_code(
+        self, latitude: float, longitude: float, place_type: str, radius: int = 1000
+    ) -> Dict[str, Any]:
+        api_key = os.getenv("GOOGLE_PLACES_API_KEY")
+        if not api_key:
+            return {"error": "Missing Google Places API key"}
+
+        url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+        params = {
+            "location": f"{latitude},{longitude}",
+            "radius": radius,
+            "type": place_type,
+            "key": api_key,
+        }
+
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url, params=params)
+            response.raise_for_status()
+            return response.json()
+
+
 
 # List of all available tools
 REALTOR_TOOLS = [
@@ -615,5 +647,6 @@ REALTOR_TOOLS = [
     GetPropertyEnvironmentRiskTool(),
     GetSimilarHomesTool(),
     GetHousingMarketDetailsTool(),
-    WalkScoreTool()
+    WalkScoreTool(),
+    GooglePlacesTool()
 ]
