@@ -1,9 +1,13 @@
-from crewai import Agent, Crew, Process, Task, LLM
-from crewai.project import CrewBase, agent, crew, task
-from crewai_tools import SerperDevTool
+from typing import List
+
+from copilotkit.crewai import (
+    copilotkit_emit_message,
+    copilotkit_emit_tool_call,
+    copilotkit_predict_state,
+)
+from crewai import LLM, Agent, Crew, Process, Task
 from crewai.agents.agent_builder.base_agent import BaseAgent
-from typing import List, Optional
-from pydantic import BaseModel, Field
+from crewai.project import CrewBase, agent, crew, task
 from crews.research_crew.realtor_tools import REALTOR_TOOLS
 from crews.research_crew.types import PropertyList
 
@@ -50,7 +54,7 @@ class ResearchCrew:
     @task
     def render_report(self) -> Task:
         return Task(config=self.tasks_config["render_report"], output_json=PropertyList)
-    
+
     @task
     def summarize_properties_task(self) -> Task:
         return Task(config=self.tasks_config["summarize_properties_task"])
@@ -62,7 +66,7 @@ class ResearchCrew:
     @crew
     def crew(self) -> Crew:
         """Creates the research crew"""
-        return Crew(
+        crew = Crew(
             agents=self.agents,
             tasks=self.tasks,
             process=Process.sequential,
@@ -71,7 +75,100 @@ class ResearchCrew:
             chat_llm=MODEL,
         )
 
+        # Emit initial state
+        copilotkit_predict_state(
+            {
+                "status": {
+                    "state": "initialized",
+                    "message": "Research crew initialized and ready",
+                }
+            }
+        )
 
-def kickoff_crew(inputs):
+        return crew
+
+
+async def kickoff_crew(inputs):
     crew = ResearchCrew()
-    return crew.crew().kickoff(inputs=inputs)
+
+    # Initial state
+    await copilotkit_predict_state(
+        {
+            "status": {
+                "state": "initialized",
+                "message": "Starting property search...",
+                "progress": 0,
+            }
+        }
+    )
+
+    # Emit starting message
+    await copilotkit_emit_message(
+        "👋 Hi! I'm starting to search for properties matching your criteria..."
+    )
+
+    # Property search phase
+    await copilotkit_predict_state(
+        {
+            "status": {
+                "state": "searching",
+                "message": "Searching for properties...",
+                "progress": 25,
+                "current_task": "property_search",
+            }
+        }
+    )
+    await copilotkit_emit_tool_call(
+        name="property_search", args={"query": inputs.get("query", "")}
+    )
+    await copilotkit_emit_message("🔍 Searching available listings in your area...")
+
+    # Analysis phase
+    await copilotkit_predict_state(
+        {
+            "status": {
+                "state": "analyzing",
+                "message": "Analyzing property matches...",
+                "progress": 50,
+                "current_task": "analysis",
+            }
+        }
+    )
+    await copilotkit_emit_message(
+        "📊 Analyzing property matches and gathering additional details..."
+    )
+
+    # Run the crew
+    result = crew.crew().kickoff(inputs=inputs)
+
+    # Format results phase
+    await copilotkit_predict_state(
+        {
+            "status": {
+                "state": "formatting",
+                "message": "Preparing your results...",
+                "progress": 75,
+                "current_task": "formatting",
+            }
+        }
+    )
+    await copilotkit_emit_message(
+        "📝 Preparing a detailed summary of the best matches..."
+    )
+
+    # Complete
+    await copilotkit_predict_state(
+        {
+            "status": {
+                "state": "complete",
+                "message": "Search complete!",
+                "progress": 100,
+                "current_task": "complete",
+            }
+        }
+    )
+    await copilotkit_emit_message(
+        "✨ All done! Here are the properties I found that match your criteria."
+    )
+
+    return result
