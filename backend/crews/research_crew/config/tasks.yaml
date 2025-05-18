@@ -41,6 +41,8 @@ geo_analysis:
   expected_output: >
     a JSON object containing the results of the basic check (risk scores) and it should also contain any additional info that was identified as child items
   agent: geodeeper_agent
+  context:
+    - property_search_task
 
 lifestyle_filter_task:
   description: >
