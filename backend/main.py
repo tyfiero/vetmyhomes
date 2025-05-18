@@ -13,13 +13,17 @@ from copilotkit.crewai import CrewAIAgent
 # Import CopilotKit FastAPI integration
 from copilotkit.integrations.fastapi import add_fastapi_endpoint
 from crews.research_crew.crew_manager import ResearchCrew, kickoff_crew
-import os
-from fastapi import BackgroundTasks, FastAPI, HTTPException
+from fastapi import BackgroundTasks, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
-from fastapi import APIRouter
 from pydantic import BaseModel, HttpUrl
 from realtor_router import router as realtor_router
+from crewai import Agent,LLM,Task,Crew
+import json
+import os
+
+
+crew_has_run = False
+CHAT_CONTEXT_PATH = "output/chat_context.txt"
 
 app = FastAPI(
     title="VetMyHomes API",
@@ -36,43 +40,79 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Create maps router
-maps_router = APIRouter(prefix="/maps", tags=["maps"])
-
-
-@maps_router.get("/{filename}")
-async def get_map(filename: str):
-    """Serve map images from the maps directory"""
-    # Define the maps directory path
-    maps_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "maps")
-
-    # Create the maps directory if it doesn't exist
-    os.makedirs(maps_dir, exist_ok=True)
-
-    # Build the full path to the requested file
-    file_path = os.path.join(maps_dir, filename)
-
-    # Check if the file exists
-    if not os.path.isfile(file_path):
-        raise HTTPException(status_code=404, detail="Map not found")
-
-    # Return the file as a response
-    return FileResponse(file_path)
-
+def get_property_conversation_agent():
+    return Agent(
+        role="Real Estate Chat Agent",
+        goal="Answer follow-up questions about property listings, lifestyle preferences, and search results.",
+        backstory="""
+            You are a smart, friendly assistant helping the user decide on a home. 
+            You already know their preferences, the listings shown, and lifestyle data.
+            Your job is to respond to follow-up questions like:
+            - Which home is closest to a gym?
+            - Which one has the best walkability?
+            - Are any of these good for remote work?
+            You provide clear, conversational answers grounded in the data provided.
+        """,
+        llm=LLM(model="openai/gpt-4.1")
+    )
 
 # Include routers
 app.include_router(realtor_router)
-app.include_router(maps_router)
+
+def dynamic_agent(user_input: str):
+    if not os.path.exists(CHAT_CONTEXT_PATH) or os.stat(CHAT_CONTEXT_PATH).st_size == 0:
+        # First interaction: run full crew
+        full_response = kickoff_crew({"query": user_input})
+
+        with open(CHAT_CONTEXT_PATH, "w") as f:
+            f.write(f"User Query: {user_input}\n\n")
+            f.write(f"{full_response}")
+
+        return full_response
+    else:
+        with open(CHAT_CONTEXT_PATH, "r") as f:
+            context = f.read()
+
+        prompt = f"""
+{context}
+
+User follow-up: {user_input}
+"""
+
+        chat_agent = get_property_conversation_agent()
+
+        followup_task = Task(
+            description="Answer user's follow-up question using the data provided below.\n" + prompt,
+            expected_output="A helpful, clear response to the user's question based on listings and lifestyle data.",
+            agent=chat_agent
+        )
+
+        chat_crew = Crew(
+            agents=[chat_agent],
+            tasks=[followup_task],
+            verbose=True
+        )
+
+        return chat_crew.kickoff()
+
+
+
+
+class SimpleAgentWrapper:
+    def run(self, input: str):
+        return dynamic_agent(input)
+
+
 sdk = CopilotKitRemoteEndpoint(
     agents=[
         CrewAIAgent(
             name="real_estate_agent",
-            description="An example agent to use as a starting point for your own agent.",
-            # flow=AgenticChatFlow(),
-            crew=ResearchCrew(),
+            description="Real estate assistant",
+            crew=SimpleAgentWrapper(),
         )
-    ],
+    ]
 )
+
 add_fastapi_endpoint(app, sdk, "/copilotkit")
 
 
@@ -114,8 +154,7 @@ async def test_dependencies():
 async def crew():
     return kickoff_crew(
         {
-            # "query": "Recommend houses in Capitol hill, Seattle, WA"
-            "query": "3627 Stone Way N, Seattle, WA 98103"
+            "query": "Recommend houses near gyms and restaraunts in Capitol hill"
         }
     )
     # return kickoff_crew(
@@ -156,6 +195,16 @@ async def analyze_property(
     # This would be implemented with actual CrewAI setup
     return {"status": "Analysis initiated", "property": request.model_dump()}
 
+@app.post("/test-chat")
+def test_chat(input: Dict[str, str]):
+    return {"reply": dynamic_agent(input["message"])}
+
+@app.post("/reset-context")
+def reset_context():
+    if os.path.exists(CHAT_CONTEXT_PATH):
+        with open(CHAT_CONTEXT_PATH, "w") as f:
+            f.truncate(0)
+    return {"status": "reset"}
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
