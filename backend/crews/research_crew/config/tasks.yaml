@@ -15,7 +15,7 @@ property_search_task:
     - Do not overwhelm the user with too many properties.
     - Not all tools are necessary, use only the tools that are relevant to the search criteria.
 
-    If the query is ambiguous, ask the user for clarification.
+    If the query is ambiguous, ask the user for clarification. IF YOU RECEIVE ONLY AN ADDRESS, GO STRAIGHT INTO GEO ANALYSIS AND SKIP THIS STEP
   expected_output: >
     A well-structured list of property listings, each with rich metadata.
   agent: property_search
