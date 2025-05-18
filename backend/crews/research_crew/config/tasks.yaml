@@ -62,8 +62,9 @@ geo_analysis:
     3. If any of the RISK scores are high, we need to dig deeper and search for other field data info. e.g. if the ERQK Earthquake risk index score is high
       3a.use the get_tract_field_names tool to identify all field names related (for this example it would start with 'ERQK')
       3b. use the get_geo_data tool with the list of relevant field names you found to go get that data
-      3c. Bring all this info into the JSON object as a subitem fo the corresponding parent field (e.g. ERQK_RISKS for this example)
-      3d. Add on "summary" item to the json under it explaining why it has that score and intelligently infering what is going on
+      3c. You can use the plot_map tool to get a topographic map of the area including fault lines. Use the add Image to analyze the map and provide a summary of the geological features in the area.
+      3d. Bring all this info into the JSON object as a subitem fo the corresponding parent field (e.g. ERQK_RISKS for this example)
+      3e. Add on "summary" item to the json under it explaining why it has that score and intelligently infering what is going on
 
     Remember, you dont need to do a deep check into the RISK areas if the risk score is not very high. e.g. 90
     The goal should be to have a clean JSON output with the main RISKS categories listed above, an if there is any additional info, they are child json items

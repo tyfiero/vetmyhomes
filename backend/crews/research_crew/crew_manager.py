@@ -7,6 +7,7 @@ from crews.research_crew.realtor_tools import REALTOR_TOOLS
 from crews.research_crew.geo_tools import GEO_TOOLS
 from crews.research_crew.types import PropertyList
 from crews.research_crew.types import EnvironmentalRisks
+from crews.research_crew.map_tools import MAP_TOOLS
 
 MODEL = "openai/gpt-4.1"
 # MODEL = "groq/llama3-70b-8192"
@@ -14,6 +15,7 @@ MODEL = "openai/gpt-4.1"
 llm = LLM(
     model=MODEL,
 )
+
 
 @CrewBase
 class ResearchCrew:
@@ -31,13 +33,14 @@ class ResearchCrew:
             # llm=llm,
             chat_llm=MODEL,
         )
-    
+
     @agent
     def geodeeper_agent(self) -> Agent:
         return Agent(
             config=self.agents_config["geodeeper_agent"],  # type: ignore[index]
             verbose=True,
-            tools=GEO_TOOLS,
+            tools=GEO_TOOLS + MAP_TOOLS,
+            multimodal=True,
         )
 
     @agent
@@ -51,8 +54,6 @@ class ResearchCrew:
     def summarizer(self) -> Agent:
         return Agent(config=self.agents_config["summarizer"])
 
-
-    
     @task
     def property_search_task(self) -> Task:
         return Task(config=self.tasks_config["property_search_task"])  # type: ignore[index]
@@ -64,7 +65,7 @@ class ResearchCrew:
     @task
     def render_report(self) -> Task:
         return Task(config=self.tasks_config["render_report"], output_json=PropertyList)
-    
+
     @task
     def summarize_properties_task(self) -> Task:
         return Task(config=self.tasks_config["summarize_properties_task"])
@@ -84,6 +85,7 @@ class ResearchCrew:
             # llm=llm,
             chat_llm=MODEL,
         )
+
 
 def kickoff_crew(inputs):
     crew = ResearchCrew()

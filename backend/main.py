@@ -84,11 +84,7 @@ async def test_dependencies():
 
 @app.post("/crew")
 async def crew():
-    return kickoff_crew(
-        {
-            "query": "Recommend houses in Capitol hill, Seattle, WA"
-        }
-    )
+    return kickoff_crew({"query": "Recommend houses in Beacon hill, Seattle, WA"})
     # return kickoff_crew(
     #     {
     #     "address": "1119 8th Avenue Seattle WA 98101",
