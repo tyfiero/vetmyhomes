@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 from crews.research_crew.realtor_tools import REALTOR_TOOLS
 from crews.research_crew.geo_tools import GEO_TOOLS
 from crews.research_crew.types import PropertyList
+from crews.research_crew.types import EnvironmentalRisks
 
 MODEL = "openai/gpt-4.1"
 # MODEL = "groq/llama3-70b-8192"
@@ -57,7 +58,7 @@ class ResearchCrew:
 
     @task
     def geo_analysis(self) -> Task:
-        return Task(config=self.tasks_config["geo_analysis"])  # type: ignore[index]
+        return Task(config=self.tasks_config["geo_analysis"], output_json=EnvironmentalRisks)  # type: ignore[index]
 
     @task
     def render_report(self) -> Task:
