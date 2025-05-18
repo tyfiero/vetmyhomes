@@ -16,14 +16,13 @@ def plot_map(lat, lon):
     # lat, lon = 47.615747, -122.322268
     zoomkm = 2  # map half-width in km
     fault_zip = "WA_Qfault_2020_Update_Shapefile"  # or the nationwide file
-    
+
     # Create maps directory if it doesn't exist
-    maps_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "maps")
-    os.makedirs(maps_dir, exist_ok=True)
-    
+    os.makedirs("maps", exist_ok=True)
+
     # Create a filename with coordinates
     filename = f"topo_map_{lat}_{lon}.png"
-    outfile = os.path.join(maps_dir, filename)
+    outfile = os.path.join("maps", filename)
     # --------------------------------------------------------------------------
 
     # Build a GeoDataFrame with the point of interest

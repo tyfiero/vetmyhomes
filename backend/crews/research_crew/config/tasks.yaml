@@ -42,7 +42,6 @@ geo_analysis:
     a JSON object containing the results of the basic check (risk scores) and it should also contain any additional info that was identified as child items
   agent: geodeeper_agent
 
-render_json:
 lifestyle_filter_task:
   description: >
     If the user's query includes lifestyle preferences (e.g., gym, nightlife, restaurants), use the get_nearby_places tool to find those amenities around each property.
@@ -54,7 +53,7 @@ lifestyle_filter_task:
   context:
     - property_search_task
 
-render_report:
+render_json:
   description: >
     Analyze the property list and create json object with property list
   expected_output: >

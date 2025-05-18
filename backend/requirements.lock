@@ -63,6 +63,8 @@ certifi==2025.4.26
     #   httpcore
     #   httpx
     #   kubernetes
+    #   pyogrio
+    #   pyproj
     #   requests
 cffi==1.17.1
     # via cryptography
@@ -90,13 +92,15 @@ cohere==5.15.0
     # via langchain-cohere
 coloredlogs==15.0.1
     # via onnxruntime
+copilotkit==0.1.46
+    # via -r requirements.txt
 crewai==0.120.1
     # via
     #   -r requirements.txt
     #   crewai-tools
 crewai-tools==0.45.0
     # via crewai
-cryptography==45.0.1
+cryptography==45.0.2
     # via
     #   auth0-python
     #   pdfminer-six
@@ -135,7 +139,8 @@ fastapi==0.115.12
     # via
     #   -r requirements.txt
     #   chromadb
-fastavro==1.10.0
+    #   copilotkit
+fastavro==1.11.1
     # via cohere
 filelock==3.18.0
     # via huggingface-hub
@@ -150,6 +155,8 @@ frozenlist==1.6.0
     #   aiosignal
 fsspec==2025.3.2
     # via huggingface-hub
+geopandas==1.0.1
+    # via -r requirements.txt
 google-auth==2.40.1
     # via kubernetes
 googleapis-common-protos==1.70.0
@@ -185,6 +192,7 @@ httpx==0.28.1
     #   -r requirements.txt
     #   chromadb
     #   cohere
+    #   langgraph-sdk
     #   langsmith
     #   litellm
     #   openai
@@ -256,6 +264,7 @@ lancedb==0.22.0
     # via crewai-tools
 langchain==0.3.25
     # via
+    #   copilotkit
     #   embedchain
     #   langchain-community
 langchain-cohere==0.3.5
@@ -272,12 +281,25 @@ langchain-core==0.3.60
     #   langchain-experimental
     #   langchain-openai
     #   langchain-text-splitters
+    #   langgraph
+    #   langgraph-checkpoint
+    #   langgraph-prebuilt
 langchain-experimental==0.3.4
     # via langchain-cohere
 langchain-openai==0.2.14
     # via embedchain
 langchain-text-splitters==0.3.8
     # via langchain
+langgraph==0.4.5
+    # via copilotkit
+langgraph-checkpoint==2.0.26
+    # via
+    #   langgraph
+    #   langgraph-prebuilt
+langgraph-prebuilt==0.1.8
+    # via langgraph
+langgraph-sdk==0.1.69
+    # via langgraph
 langsmith==0.3.42
     # via
     #   embedchain
@@ -332,12 +354,15 @@ numpy==2.2.5
     #   -r requirements.txt
     #   chroma-hnswlib
     #   chromadb
+    #   geopandas
     #   gptcache
     #   lancedb
     #   langchain-community
     #   onnxruntime
     #   pandas
+    #   pyogrio
     #   qdrant-client
+    #   shapely
 oauthlib==3.2.2
     # via
     #   kubernetes
@@ -408,7 +433,10 @@ orjson==3.10.18
     # via
     #   -r requirements.txt
     #   chromadb
+    #   langgraph-sdk
     #   langsmith
+ormsgpack==1.9.1
+    # via langgraph-checkpoint
 overrides==7.7.0
     # via
     #   chromadb
@@ -418,6 +446,7 @@ packaging==24.2
     #   -r requirements.txt
     #   build
     #   deprecation
+    #   geopandas
     #   huggingface-hub
     #   lancedb
     #   langchain-core
@@ -425,10 +454,15 @@ packaging==24.2
     #   marshmallow
     #   onnxruntime
     #   opentelemetry-instrumentation
+    #   pyogrio
 pandas==2.2.3
-    # via langchain-cohere
+    # via
+    #   geopandas
+    #   langchain-cohere
 parso==0.8.4
     # via jedi
+partialjson==0.0.8
+    # via copilotkit
 pdfminer-six==20250327
     # via pdfplumber
 pdfplumber==0.11.6
@@ -485,6 +519,7 @@ pydantic==2.11.4
     #   langchain
     #   langchain-cohere
     #   langchain-core
+    #   langgraph
     #   langsmith
     #   litellm
     #   mem0ai
@@ -508,12 +543,16 @@ pygments==2.19.1
     #   rich
 pyjwt==2.10.1
     # via auth0-python
+pyogrio==0.11.0
+    # via geopandas
 pypdf==5.5.0
     # via embedchain
 pypdfium2==4.30.1
     # via pdfplumber
 pypika==0.48.9
     # via chromadb
+pyproj==3.7.1
+    # via geopandas
 pyproject-hooks==1.2.0
     # via build
 pyright==1.1.400
@@ -603,6 +642,8 @@ rsa==4.9.1
     # via google-auth
 schema==0.7.7
     # via embedchain
+shapely==2.1.0
+    # via geopandas
 shellingham==1.5.4
     # via typer
 six==1.17.0
@@ -650,6 +691,8 @@ tokenizers==0.20.3
     #   chromadb
     #   cohere
     #   litellm
+toml==0.10.2
+    # via copilotkit
 tomli==2.2.1
     # via crewai
 tomli-w==1.2.0
@@ -740,6 +783,8 @@ wrapt==1.17.2
     # via
     #   deprecated
     #   opentelemetry-instrumentation
+xxhash==3.5.0
+    # via langgraph
 yarl==1.20.0
     # via
     #   -r requirements.txt
