@@ -16,7 +16,7 @@ from crews.research_crew.crew_manager import ResearchCrew, kickoff_crew
 import os
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi import APIRouter
 from pydantic import BaseModel, HttpUrl
 from realtor_router import router as realtor_router
@@ -73,7 +73,7 @@ sdk = CopilotKitRemoteEndpoint(
         )
     ],
 )
-add_fastapi_endpoint(app, sdk, "/")
+add_fastapi_endpoint(app, sdk, "/copilotkit_remote")
 
 
 class PropertyUrlRequest(BaseModel):
@@ -97,6 +97,25 @@ class PropertyDataRequest(BaseModel):
 async def root():
     """Health check endpoint"""
     return {"status": "ok", "message": "VetMyHomes API is running"}
+
+
+@app.get("/info")
+async def info():
+    """Get API information"""
+    return JSONResponse({
+        "name": "VetMyHomes API",
+        "version": "0.1.0",
+        "description": "API for analyzing real estate properties and environmental risks",
+        "endpoints": {
+            "/": "Health check endpoint",
+            "/info": "Get API information",
+            "/test-deps": "Test dependencies status",
+            "/crew": "Run property analysis crew",
+            "/extract-property": "Extract property data from URL",
+            "/analyze-property": "Analyze property data",
+            "/maps/{filename}": "Get property map images"
+        }
+    })
 
 
 @app.get("/test-deps")
