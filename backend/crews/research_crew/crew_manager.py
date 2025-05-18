@@ -9,6 +9,8 @@ from crews.research_crew.types import PropertyList
 from crews.research_crew.types import EnvironmentalRisks
 from crews.research_crew.map_tools import MAP_TOOLS
 
+# from crewai.tools import AddImageTool
+
 MODEL = "openai/gpt-4.1"
 # MODEL = "groq/llama3-70b-8192"
 
@@ -63,12 +65,12 @@ class ResearchCrew:
         return Task(config=self.tasks_config["geo_analysis"])  # type: ignore[index]
 
     @task
-    def render_report(self) -> Task:
-        return Task(config=self.tasks_config["render_report"], output_json=PropertyList)
+    def render_json(self) -> Task:
+        return Task(config=self.tasks_config["render_json"], output_json=PropertyList)
 
-    @task
-    def summarize_properties_task(self) -> Task:
-        return Task(config=self.tasks_config["summarize_properties_task"])
+    # @task
+    # def summarize_properties_task(self) -> Task:
+    #     return Task(config=self.tasks_config["summarize_properties_task"])
 
     # @task
     # def walkscore_task(self) -> Task:

@@ -1,17 +1,22 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
 
+
 class RiskItem(BaseModel):
     code: str = Field(..., description="Risk code identifier")
     description: str = Field(..., description="Description of the risk factor")
     value: float = Field(..., description="Value or score for this risk factor")
+
 
 class RiskDetail(BaseModel):
     level: str = Field(..., description="Risk level (low, medium, high)")
     description: str = Field(..., description="Description of the risk")
     score: Optional[float] = Field(None, description="Numerical risk score")
     summary: Optional[str] = Field(None, description="Summary of the risk")
-    items: List[RiskItem] = Field(..., description="List of risk items for this sub-risk")
+    items: List[RiskItem] = Field(
+        ..., description="List of risk items for this sub-risk"
+    )
+
 
 class EnvironmentalRisks(BaseModel):
     earthquake: Optional[RiskDetail] = None
@@ -20,6 +25,10 @@ class EnvironmentalRisks(BaseModel):
     wildfire: Optional[RiskDetail] = None
     hurricane: Optional[RiskDetail] = None
     summary: Optional[str] = Field(None, description="Summary of the risks")
+    fault_lines_map: Optional[str] = Field(
+        None, description="Fault lines map url if generated else None"
+    )
+
 
 class Property(BaseModel):
     """Model representing a real estate property."""
@@ -41,8 +50,3 @@ class Property(BaseModel):
 
 class PropertyList(BaseModel):
     properties: list[Property]
-
-
-
-
-

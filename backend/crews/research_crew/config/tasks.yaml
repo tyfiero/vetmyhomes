@@ -30,7 +30,7 @@ geo_analysis:
     3. If any of the RISK scores are high, we need to dig deeper and search for other field data info. e.g. if the ERQK Earthquake risk index score is high
       3a.use the get_tract_field_names tool to identify all field names related (for this example it would start with 'ERQK')
       3b. use the get_geo_data tool with the list of relevant field names you found to go get that data
-      3c. You can use the plot_map tool to get a topographic map of the area including fault lines. Use the add Image to analyze the map and provide a summary of the geological features in the area.
+      3c. You can use the plot_map tool to get a topographic map of the area including fault lines. Use the add Image tool to analyze the map and provide a summary of the geological features in the area.
       3d. Bring all this info into the JSON object as a subitem fo the corresponding parent field (e.g. ERQK_RISKS for this example)
       3e. Add on "summary" item to the json under it explaining why it has that score and intelligently infering what is going on
 
@@ -42,7 +42,7 @@ geo_analysis:
     a JSON object containing the results of the basic check (risk scores) and it should also contain any additional info that was identified as child items
   agent: geodeeper_agent
 
-render_report:
+render_json:
   description: >
     Analyze the property list and create json object with property list
   expected_output: >
@@ -59,6 +59,7 @@ render_report:
             "agent_phone": "555-1234",
             "agent_email": "john.doe@example.com",
             "tract_fips": "0558112234",
+            "fault_lines_map": "",
             "environmental_risks": {
               "earthquake": {
                 "level": "medium",
