@@ -24,12 +24,12 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="en" className="h-full w-full">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+				className={`${geistSans.variable} ${geistMono.variable} antialiased h-full w-full flex flex-col`}
 			>
-				{/* <Navbar /> */}
-				{children}
+				<Navbar />
+				<main className="flex-grow overflow-auto">{children}</main>
 			</body>
 		</html>
 	);

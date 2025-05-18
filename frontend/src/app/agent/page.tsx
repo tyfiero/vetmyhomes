@@ -24,10 +24,9 @@ export default function CopilotKitPage() {
 	// });
 
 	return (
-		<main className="h-screen w-full flex" suppressHydrationWarning>
+		<main className="h-full w-full flex" suppressHydrationWarning>
 			<CopilotChat
-				suppressHydrationWarning
-				className="min-w-1/3"
+				className="min-w-1/3 overflow-y-auto"
 				labels={{
 					title: "Popup Assistant",
 					initial: "👋 Hi, there! How can I help you today?",
@@ -130,7 +129,7 @@ function MainContent({ themeColor }: { themeColor: string }): ReactNode {
 	return (
 		<div
 			style={{ backgroundColor: themeColor }}
-			className="w-full flex justify-center items-start pt-8 flex-col transition-colors duration-300 h-full px-4 overflow-y-auto"
+			className="w-full flex items-start flex-col transition-colors duration-300 h-full px-4 overflow-y-auto"
 		>
 			<div className="bg-white/20 backdrop-blur-md p-8 rounded-2xl shadow-xl max-w-2xl w-full my-8">
 				<h1 className="text-4xl font-bold text-white mb-2 text-center">
