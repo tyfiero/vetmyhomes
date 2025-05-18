@@ -55,13 +55,29 @@ lifestyle_filter_task:
   context:
     - property_search_task
 
+summarize_properties_task:
+  description: >
+    Write a short 3–5 line markdown summary based only on what the user was looking for and what the data showed.
+    Skip generic observations.
+    Mention lifestyle factors like gyms, transit, or walkability *only if the user asked for them* and data supports it.
+    Keep it casual, honest, direct and clear — like you’re giving a quick recommendation.
+  expected_output: >
+    A markdown summary that is simple, specific, and free of generic AI tone.
+    Avoid listing every property. Focus on user interests and what’s actually notable.
+  agent: summarizer
+  output_file: output/property_summary.md
+  context:
+    - property_search_task
+    - lifestyle_filter_task
+
 render_json:
   description: >
     Analyze the property list and create json object with property list
   expected_output: >
     A JSON object containing the property list with the following structure:
     {
-        "properties": [
+    "summary": "",
+    "properties": [
           {
             "address": "123 Main St",
             "price": 100000,
@@ -119,23 +135,8 @@ render_json:
         ]
       }
   agent: output_agent
-  output_file: output/property_list.json
   context:
     - property_search_task
     - geo_analysis
     - lifestyle_filter_task
-
-summarize_properties_task:
-  description: >
-    Write a short 3–5 line markdown summary based only on what the user was looking for and what the data showed.
-    Skip generic observations.
-    Mention lifestyle factors like gyms, transit, or walkability *only if the user asked for them* and data supports it.
-    Keep it casual, honest, direct and clear — like you’re giving a quick recommendation.
-  expected_output: >
-    A markdown summary that is simple, specific, and free of generic AI tone.
-    Avoid listing every property. Focus on user interests and what’s actually notable.
-  agent: summarizer
-  output_file: output/property_summary.md
-  context:
-    - property_search_task
-    - lifestyle_filter_task
+    - summarize_properties_task

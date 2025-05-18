@@ -60,6 +60,7 @@ class ResearchCrew:
             tools=REALTOR_TOOLS,
             chat_llm=MODEL,
         )
+
     @agent
     def summarizer(self) -> Agent:
         return Agent(config=self.agents_config["summarizer"])
@@ -67,7 +68,7 @@ class ResearchCrew:
     @task
     def property_search_task(self) -> Task:
         return Task(config=self.tasks_config["property_search_task"])  # type: ignore[index]
-    
+
     @task
     def lifestyle_filter_task(self) -> Task:
         return Task(config=self.tasks_config["lifestyle_filter_task"])
@@ -77,12 +78,12 @@ class ResearchCrew:
         return Task(config=self.tasks_config["geo_analysis"])  # type: ignore[index]
 
     @task
+    def summarize_properties_task(self) -> Task:
+        return Task(config=self.tasks_config["summarize_properties_task"])
+
+    @task
     def render_json(self) -> Task:
         return Task(config=self.tasks_config["render_json"], output_json=PropertyList)
-
-    # @task
-    # def summarize_properties_task(self) -> Task:
-    #     return Task(config=self.tasks_config["summarize_properties_task"])
 
     # @task
     # def walkscore_task(self) -> Task:

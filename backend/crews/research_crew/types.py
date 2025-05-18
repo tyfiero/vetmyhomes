@@ -50,3 +50,4 @@ class Property(BaseModel):
 
 class PropertyList(BaseModel):
     properties: list[Property]
+    summary: str = Field(..., description="Summary of the properties")
