@@ -1,13 +1,36 @@
+import React from "react";
 import { CopilotChat } from "@copilotkit/react-ui";
 // import type { Message as CopilotMessageType } from "@copilotkit/react-core"; // Attempted this, but still faced linter issues.
 import { useEffect, useState } from "react";
+
+// Define a more specific type for the message object
+interface ActionExecutionStatus {
+	code?: string;
+	// Potentially other status fields
+}
+interface BaseMessage {
+	content?: string;
+	type?: string;
+	id?: string;
+	role?: "user" | "assistant" | "system" | "function" | "action"; // Expanded roles
+}
+
+interface ActionExecutionMessageShape extends BaseMessage {
+	type: "ActionExecutionMessage";
+	name: string;
+	status: ActionExecutionStatus;
+	// args?: any; // If arguments are passed and used
+	// result?: any; // If result is part of the message
+}
+
+// A union type for more flexibility if other message types are possible
+type CopilotMessage = ActionExecutionMessageShape | BaseMessage;
 
 // Using 'any' for the message type as a temporary workaround for linter issues
 // with specific type imports from @copilotkit/react-core.
 // The structure of the message object (e.g., message.content) is assumed based on common patterns.
 export interface CopilotMessageRenderProps {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	message: any; // Fallback to any to bypass import/type resolution issues for now
+	message: CopilotMessage; // Updated from any to CopilotMessage
 }
 
 const CustomActionExecutionMessage: React.FC<CopilotMessageRenderProps> = ({
@@ -26,8 +49,8 @@ const CustomActionExecutionMessage: React.FC<CopilotMessageRenderProps> = ({
 		// Agent name from the message object itself, if available
 		// let agentDisplayName: string | undefined;
 
-		if (message && message.type === "ActionExecutionMessage") {
-			// Use message.name as the primary identifier for the action/task
+		if (message.type === "ActionExecutionMessage") {
+			// message is now narrowed to ActionExecutionMessageShape
 			taskName = message.name;
 			if (message.status && typeof message.status.code === "string") {
 				currentStatus = message.status.code;
@@ -37,8 +60,8 @@ const CustomActionExecutionMessage: React.FC<CopilotMessageRenderProps> = ({
 			// We could potentially map `message.name` to a more friendly display name if needed.
 			// For now, we'll use message.name directly or a generic term.
 			// agentDisplayName = message.name; // Or a more generic term like "Agent"
-		} else if (message && typeof message.content === "string") {
-			// Fallback for older assumption or if content has JSON string with task details
+		} else if (typeof message.content === "string") {
+			// Fallback for BaseMessage or if content has JSON string with task details
 			try {
 				const parsedContent = JSON.parse(message.content);
 				if (parsedContent.task_name && parsedContent.status) {
