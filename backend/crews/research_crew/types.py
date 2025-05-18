@@ -26,7 +26,7 @@ class EnvironmentalRisks(BaseModel):
     hurricane: Optional[RiskDetail] = None
     summary: Optional[str] = Field(None, description="Summary of the risks")
     fault_lines_map: Optional[str] = Field(
-        None, description="Fault lines map url if generated else None"
+        None, description="Fault lines map url if generated"
     )
 
 

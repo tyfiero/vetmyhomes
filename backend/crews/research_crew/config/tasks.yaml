@@ -17,7 +17,7 @@ property_search_task:
 
     If the query is ambiguous, ask the user for clarification. IF YOU RECEIVE ONLY AN ADDRESS, GO STRAIGHT INTO GEO ANALYSIS AND SKIP THIS STEP
   expected_output: >
-    A well-structured list of property listings, each with rich metadata.
+    A well-structured list of the filtered property listings. Iclude all the metadata fetched from the property search tools.
   agent: property_search
 
 geo_analysis:
@@ -30,7 +30,7 @@ geo_analysis:
     3. If any of the RISK scores are high, we need to dig deeper and search for other field data info. e.g. if the ERQK Earthquake risk index score is high
       3a.use the get_tract_field_names tool to identify all field names related (for this example it would start with 'ERQK')
       3b. use the get_geo_data tool with the list of relevant field names you found to go get that data
-      3c. You can use the plot_map tool to get a topographic map of the area including fault lines. Use the add Image tool to analyze the map and provide a summary of the geological features in the area.
+      3c. Use the plot_map tool to get a topographic map of the area including fault lines.
       3d. Bring all this info into the JSON object as a subitem fo the corresponding parent field (e.g. ERQK_RISKS for this example)
       3e. Add on "summary" item to the json under it explaining why it has that score and intelligently infering what is going on
 
@@ -72,11 +72,11 @@ summarize_properties_task:
 
 render_json:
   description: >
-    Analyze the property list and create json object with property list
+    Analyze the property list and create json object with property list. For the summary, use the summary from the summarize_properties_task
   expected_output: >
     A JSON object containing the property list with the following structure:
     {
-    "summary": "",
+    "summary": "summarize_properties_task",
     "properties": [
           {
             "address": "123 Main St",
@@ -136,7 +136,7 @@ render_json:
       }
   agent: output_agent
   context:
+    - summarize_properties_task
     - property_search_task
     - geo_analysis
     - lifestyle_filter_task
-    - summarize_properties_task

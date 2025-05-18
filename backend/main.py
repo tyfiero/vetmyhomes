@@ -114,8 +114,8 @@ async def test_dependencies():
 async def crew():
     return kickoff_crew(
         {
-            "query": "Recommend houses in Capitol hill, Seattle, WA"
-            # "query": "3627 Stone Way N, Seattle, WA 98103"
+            # "query": "Recommend houses in Capitol hill, Seattle, WA"
+            "query": "3627 Stone Way N, Seattle, WA 98103"
         }
     )
     # return kickoff_crew(
