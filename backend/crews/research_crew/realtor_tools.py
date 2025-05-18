@@ -1,5 +1,7 @@
 from enum import Enum
 from typing import Any, Dict, List, Optional, Type
+import os
+import urllib.parse
 
 import httpx
 from config import settings
@@ -7,6 +9,7 @@ from crewai.tools import BaseTool
 from pydantic import BaseModel, Field
 from concurrent.futures import ThreadPoolExecutor
 import asyncio
+import requests
 
 
 # Base URL for RapidAPI Realtor API
@@ -597,6 +600,46 @@ class GetHousingMarketDetailsTool(AsyncBaseTool):
         return await call_rapid_api("/market/details", params)
 
 
+class WalkScoreInput(BaseModel):
+    """Input schema for fetching Walk Score."""
+    address: str = Field(..., description="Street address of the location")
+    latitude: float = Field(..., description="Latitude of the location")
+    longitude: float = Field(..., description="Longitude of the location")
+
+
+class WalkScoreTool(BaseTool):
+    name: str = "get_walkscore"
+    description: str = "Get Walk Score, Transit Score, and Bike Score for a given address and coordinates"
+    args_schema: Type[BaseModel] = WalkScoreInput
+
+    def _run(self, address: str, latitude: float, longitude: float) -> str:
+        """Call WalkScore API with address and coordinates."""
+        api_key = os.getenv("WALKSCORE_API_KEY")
+        if not api_key:
+            return "Missing WalkScore API key"
+
+        encoded_address = urllib.parse.quote(address)
+        url = (
+            f"https://api.walkscore.com/score"
+            f"?format=json&address={encoded_address}&lat={latitude}&lon={longitude}"
+            f"&wsapikey={api_key}"
+        )
+
+        try:
+            response = requests.get(url, timeout=10)
+            response.raise_for_status()
+            data = response.json()
+            return (
+                f"Walk Score: {data.get('walkscore')} ({data.get('description')})\n"
+                f"Transit Score: {data.get('transit', {}).get('score')} "
+                f"({data.get('transit', {}).get('description')})\n"
+                f"Bike Score: {data.get('bike', {}).get('score')} "
+                f"({data.get('bike', {}).get('description')})"
+            )
+        except Exception as e:
+            return f"Error fetching WalkScore: {e}"
+
+
 # List of all available tools
 REALTOR_TOOLS = [
     SearchForSaleTool(),
@@ -614,4 +657,5 @@ REALTOR_TOOLS = [
     GetPropertyEnvironmentRiskTool(),
     GetSimilarHomesTool(),
     GetHousingMarketDetailsTool(),
+    WalkScoreTool()
 ]

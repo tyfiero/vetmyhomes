@@ -1,46 +1,44 @@
-# src/research_crew/config/tasks.yaml
 property_search_task:
   description: >
-    Analyze the user query: "{query}" and extract key information about the property search request.
-    First, determine what the user is looking for:
-    - Is the user looking for properties for sale, for rent, or recently sold?
-    - What location is the user interested in?
-    - Are there any specific property types mentioned (house, condo, apartment)?
-    - Is there a price range mentioned or implied?
-    - Are there any bedroom or bathroom requirements?
-    - Are there any special features requested?
+    Analyze the user query: "{query}" and extract key information about the property search request:
+    - Buy, rent, or sold?
+    - Desired location
+    - Property type
+    - Price range
+    - Bedrooms, bathrooms, features
 
-    Then, use the appropriate realtor tools to search for properties that match these criteria.
-    For each property found, collect the following information:
-    - Property address and basic details
-    - Price and key features
+    Use the realtor tools to search for properties that match the criteria.
+    For each property found, gather:
+    - Address
+    - Latitude and Longitude
+    - Price, bedrooms, bathrooms
     - Photos (if available)
-    - Agent information
-    - Environmental risks (if available)
-    - Similar properties in the area
-    - Market trends for the neighborhood
+    - Agent info
+    - Environmental risk data
+    - Market trends
 
-    If the query is ambiguous, focus on the most likely interpretation and provide the most relevant results.
+    For the most promising or urban-located properties, call the "get_walkscore" tool
+    using the correct address, latitude, and longitude format.
+
+    Include Walk Score, Transit Score, and Bike Score in your final results for those properties.
+
   expected_output: >
-    A comprehensive list of properties that match the search criteria extracted from the user query,
-    with each property containing detailed information including address, price, features, photos,
-    agent details, and environmental considerations. The list should be well-structured and include
-    a summary of market trends for the specified location.
+    A well-structured list of property listings, each with rich metadata.
+    For selected listings, include a formatted section summarizing Walk Score data.
   agent: property_search
-  output_file: output/property_list.json
+  output_file: output/property_list_with_walkscore.json
 
 render_report:
   description: >
-    Analyze the property list and create a comprehensive report on the properties.
+    Analyze the enhanced property list and create a final report with summaries and insights.
     Your report should:
     1. Begin with an executive summary
-    2. Include all key information from the property list
-    3. Provide insightful analysis of trends and patterns
-    4. Offer recommendations or future considerations
-    5. Be formatted in a professional, easy-to-read style with clear headings
+    2. Include all key data from the listings
+    3. Highlight any patterns or market insights
+    4. Recommend top properties based on user preferences
+    5. Be formatted cleanly for readability
   expected_output: >
-    A formatted list of properties that match the search criteria extracted from the user query.
-
+    A markdown or PDF report summarizing the top real estate findings and mobility scores.
   agent: property_search
   context:
     - property_search_task
