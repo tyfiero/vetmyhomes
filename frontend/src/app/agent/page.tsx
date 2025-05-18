@@ -120,47 +120,47 @@ function MainContent({ themeColor }: { themeColor: string }): ReactNode {
 	});
 
 	// Extract properties from outputs if needed
-	useEffect(() => {
-		console.log("Current agent state:", state);
+	// useEffect(() => {
+	// 	console.log("Current agent state:", state);
 
-		// If state.outputs contains a string and properties array is potentially empty or needs update
-		if (
-			state?.outputs &&
-			typeof state.outputs === "string" &&
-			state.outputs.trim() !== ""
-		) {
-			console.log("Attempting to parse state.outputs:", state.outputs);
-			try {
-				const correctedOutput = state.outputs.replace(/'/g, '"');
-				console.log("Corrected state.outputs for parsing:", correctedOutput);
-				const parsedData = JSON.parse(correctedOutput);
+	// 	// If state.outputs contains a string and properties array is potentially empty or needs update
+	// 	if (
+	// 		state?.outputs &&
+	// 		typeof state.outputs === "string" &&
+	// 		state.outputs.trim() !== ""
+	// 	) {
+	// 		console.log("Attempting to parse state.outputs:", state.outputs);
+	// 		try {
+	// 			const correctedOutput = state.outputs.replace(/'/g, '"');
+	// 			console.log("Corrected state.outputs for parsing:", correctedOutput);
+	// 			const parsedData = JSON.parse(correctedOutput);
 
-				if (parsedData?.properties && Array.isArray(parsedData.properties)) {
-					// TODO: Add more robust validation for each property object if necessary
-					const newProperties: PropertyDetail[] = parsedData.properties;
+	// 			if (parsedData?.properties && Array.isArray(parsedData.properties)) {
+	// 				// TODO: Add more robust validation for each property object if necessary
+	// 				const newProperties: PropertyDetail[] = parsedData.properties;
 
-					// Only update if the parsed properties are different from current ones
-					// This is a shallow comparison, for deep comparison, a utility function would be needed
-					// or compare based on a specific aspect like number of properties.
-					if (
-						JSON.stringify(newProperties) !== JSON.stringify(state.properties)
-					) {
-						setState((prev) => ({
-							...prev,
-							properties: newProperties,
-							// outputs: "", // Clear outputs after successful parsing to prevent re-processing
-						}));
-					}
-				} else {
-					// console.log("Parsed data does not contain 'properties' array:", parsedData);
-				}
-			} catch (e) {
-				console.error("Failed to parse properties from state.outputs JSON:", e);
-				// Potentially set an error state or clear properties if parsing fails
-				// setState(prev => ({ ...prev, properties: [] }));
-			}
-		}
-	}, [state, setState]); // Dependency on state (which includes outputs) and setState
+	// 				// Only update if the parsed properties are different from current ones
+	// 				// This is a shallow comparison, for deep comparison, a utility function would be needed
+	// 				// or compare based on a specific aspect like number of properties.
+	// 				if (
+	// 					JSON.stringify(newProperties) !== JSON.stringify(state.properties)
+	// 				) {
+	// 					setState((prev) => ({
+	// 						...prev,
+	// 						properties: newProperties,
+	// 						// outputs: "", // Clear outputs after successful parsing to prevent re-processing
+	// 					}));
+	// 				}
+	// 			} else {
+	// 				// console.log("Parsed data does not contain 'properties' array:", parsedData);
+	// 			}
+	// 		} catch (e) {
+	// 			console.error("Failed to parse properties from state.outputs JSON:", e);
+	// 			// Potentially set an error state or clear properties if parsing fails
+	// 			// setState(prev => ({ ...prev, properties: [] }));
+	// 		}
+	// 	}
+	// }, [state, setState]); // Dependency on state (which includes outputs) and setState
 
 	// 🪁 Frontend Actions: https://docs.copilotkit.ai/coagents/frontend-actions
 
