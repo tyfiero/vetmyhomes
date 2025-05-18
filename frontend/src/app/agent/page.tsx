@@ -2,8 +2,8 @@
 
 import type { ReactNode } from "react";
 import { useCoAgent, useCopilotAction } from "@copilotkit/react-core";
-import { CopilotChat } from "@copilotkit/react-ui";
 import { useEffect, useState } from "react";
+import { CopilotChatComponent } from "@/components/CopilotChatComponent";
 
 export default function CopilotKitPage() {
 	const [themeColor] = useState("#a4c1ff");
@@ -25,13 +25,7 @@ export default function CopilotKitPage() {
 
 	return (
 		<main className="h-full w-full flex" suppressHydrationWarning>
-			<CopilotChat
-				className="min-w-1/3 overflow-y-auto"
-				labels={{
-					title: "Popup Assistant",
-					initial: "👋 Hi, there! How can I help you today?",
-				}}
-			/>
+			<CopilotChatComponent />
 			<MainContent themeColor={themeColor} />
 		</main>
 	);
