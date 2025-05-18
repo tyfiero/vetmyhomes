@@ -36,7 +36,8 @@ render_report:
           "agent": "John Doe",
           "agent_phone": "555-1234",
           "agent_email": "john.doe@example.com",
-          "environmental_risk": "low",
+          "environmental_risk": "",
+          "tract_fips": '0558112234'
           "photos": [
             "https://example.com/photo1.jpg",
             "https://example.com/photo2.jpg",
@@ -51,6 +52,25 @@ render_report:
   context:
     - property_search_task
 
+geo_analysis:
+  description: >
+    Check out the provided {query} and do some analysis to find out what the geological risk is. You should create a structured json object.
+    You should first:
+    1. Take in the address and get the unique property track ID ('tract_fips')
+    2. Do a quick check of 'ERQK_RISKS' Earthquake Risk Index Score, 'WFIR_RISKS' Wildfire Risk Index Score, 'RFLD_RISKS' Riverine Flood Risk Index Score, 
+    'CFLD_RISKS' Coastal Flood Risk Index Score, 'LNDS_RISKS' Landslide Risk Index Score, using the get_geo_data tool using that newly acquired 'tract_fips' ID
+    3. If any of the RISK scores are high, we need to dig deeper and search for other field data info. e.g. if the ERQK Earthquake risk index score is high
+      3a.use the get_tract_field_names tool to identify all field names related (for this example it would start with 'ERQK')
+      3b. use the get_geo_data tool with the list of relevant field names you found to go get that data
+      3c. Bring all this info into the JSON object as a subitem fo the corresponding parent field (e.g. ERQK_RISKS for this example)
+      3d. Add on "summary" item to the json under it explaining why it has that score and intelligently infering what is going on
+
+    Remember, you dont need to do a deep check into the RISK areas if the risk score is not very high. e.g. 90
+    The goal should be to have a clean JSON output with the main RISKS categories listed above, an if there is any additional info, they are child json items
+
+  expected_output: >
+    a JSON object containing the results of the basic check (risk scores) and it should also contain any additional info that was identified as child items
+  agent: geodeeper_agent
 
 summarize_properties_task:
   description: >

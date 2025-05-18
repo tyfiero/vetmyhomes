@@ -1,20 +1,17 @@
 # A simple set of async functions to get the geo data for a given address, refactored for CrewAI tool usage
 from typing import Dict, Any, List
-import requests
 import pandas as pd
 
 import httpx
-import numpy as np
-from utils import parse_us_address
+from .utils import parse_us_address
 
-ADDRESS = "1605 Boylston Ave, Seattle, WA 98122"
 GEO_API_URL = "https://geocoding.geo.census.gov/geocoder/geographies/address"
 LONG_LAT_API_URL = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress"
 
 # TODO: Have the CSV get loaded on app run into memory to be referenced in the main.py
 # Load CSV data for service use - temporary
-tract_data = pd.read_csv("NRI_Table_CensusTracts_Washington.csv")
-tract_data_columns = pd.read_csv("NRIDataDictionary.csv")
+tract_data = pd.read_csv("geodeeper_service/NRI_Table_CensusTracts_Washington.csv")
+tract_data_columns = pd.read_csv("geodeeper_service/NRIDataDictionary.csv")
 
 # Consolidated function to get tract FIPS from address
 async def get_tract_fips_from_address(address: str) -> dict:
@@ -94,17 +91,16 @@ async def get_tract_field_names() -> list[dict]:
         list[dict]: List of {"field_name": ..., "field_alias": ...}
     """
     try:
-        data_dict = pd.read_csv("NRIDataDictionary.csv")
         return [
             {"field_name": row["Field Name"], "field_alias": row["Field Alias"]}
-            for _, row in data_dict.iterrows()
+            for _, row in tract_data_columns.iterrows()
         ]
     except Exception as e:
         return []
 
 
 # Function to take in an arbitrary field name(s) and return the data for that field with the corresponding tract fips
-async def get_tract_data(field_names: list[str], tract_fips: str) -> dict:
+async def get_geo_data(field_names: list[str], tract_fips: str) -> dict:
     """
     Async tool to get the data for a given field name(s) and tract FIPS.
     Args:
@@ -132,15 +128,3 @@ async def get_tract_data(field_names: list[str], tract_fips: str) -> dict:
     except Exception as e:
         return {"error": str(e)}
 
-
-# Remove after moving into a tool
-import asyncio
-
-if __name__ == "__main__":
-
-    tract_fips = asyncio.run(get_tract_fips_from_address(ADDRESS))['tract_fips']
-    field_names = asyncio.run(get_tract_field_names())
-    single_result = asyncio.run(get_tract_data(['TSUN_ALRP'], tract_fips))
-    multiple_results = asyncio.run(get_tract_data(['TSUN_ALRP', 'TRND_HLRA'], tract_fips))
-    print('single_result', single_result)
-    print('multiple_results', multiple_results)
