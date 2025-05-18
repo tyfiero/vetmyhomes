@@ -10,12 +10,13 @@ property_search:
     by calling external tools like WalkScore to assess lifestyle and mobility factors.
   llm: openai/gpt-4o
   allow_delegation: false
+
 # GeoDeeper Agent
 geodeeper_agent:
   role: >
     Geological Risk Expert Analyst
   goal: >
-    Identify a basic scoring rubric for a given {address} and provide a detailed report if red flags are found
+    Identify a basic scoring rubric for a given {query} and provide a detailed report if red flags are found
   backstory: >
     You are an expert Geological Analyst for Real Estate that provides both a basic
     geological risk analysis for local government, but also can identify bad high level geological risk scores

@@ -54,7 +54,7 @@ render_report:
 
 geo_analysis:
   description: >
-    Check out the provided {address} and do some analysis to find out what the geological risk is. You should create a structured json object.
+    Check out the provided {query} and do some analysis to find out what the geological risk is. You should create a structured json object.
     You should first:
     1. Take in the address and get the unique property track ID ('tract_fips')
     2. Do a quick check of 'ERQK_RISKS' Earthquake Risk Index Score, 'WFIR_RISKS' Wildfire Risk Index Score, 'RFLD_RISKS' Riverine Flood Risk Index Score, 
@@ -70,5 +70,4 @@ geo_analysis:
 
   expected_output: >
     a JSON object containing the results of the basic check (risk scores) and it should also contain any additional info that was identified as child items
-
   agent: geodeeper_agent

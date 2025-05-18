@@ -32,9 +32,9 @@ class ResearchCrew:
         )
 
     @agent
-    def geo_analysis(self) -> Agent:
+    def geodeeper_agent(self) -> Agent:
         return Agent(
-            config=self.agents_config["geo_analysis"],  # type: ignore[index]
+            config=self.agents_config["geodeeper_agent"],  # type: ignore[index]
             verbose=True,
             tools=GEO_TOOLS,
         )
@@ -44,8 +44,8 @@ class ResearchCrew:
         return Task(config=self.tasks_config["property_search_task"])  # type: ignore[index]
 
     @task
-    def geo_analysis_task(self) -> Task:
-        return Task(config=self.tasks_config["geo_analysis_task"])  # type: ignore[index]
+    def geo_analysis(self) -> Task:
+        return Task(config=self.tasks_config["geo_analysis"])  # type: ignore[index]
 
     @task
     def render_report(self) -> Task:

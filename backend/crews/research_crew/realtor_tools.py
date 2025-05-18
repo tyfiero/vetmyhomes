@@ -1,5 +1,8 @@
 from enum import Enum
-from typing import Any, Dict, List, Optional, Type
+from typing import Any, Dict, Optional, Type
+import os
+import urllib.parse
+import requests
 
 import httpx
 from config import settings
@@ -562,12 +565,12 @@ class WalkScoreInput(BaseModel):
     longitude: float = Field(..., description="Longitude of the location")
 
 
-class WalkScoreTool(BaseTool):
+class WalkScoreTool(AsyncBaseTool):
     name: str = "get_walkscore"
     description: str = "Get Walk Score, Transit Score, and Bike Score for a given address and coordinates"
     args_schema: Type[BaseModel] = WalkScoreInput
 
-    def _run(self, address: str, latitude: float, longitude: float) -> str:
+    async def run_async_code(self, address: str, latitude: float, longitude: float) -> str:
         """Call WalkScore API with address and coordinates."""
         api_key = os.getenv("WALKSCORE_API_KEY")
         if not api_key:

@@ -3,16 +3,15 @@ from typing import Dict, Any, List
 import pandas as pd
 
 import httpx
-import numpy as np
-from utils import parse_us_address
+from .utils import parse_us_address
 
 GEO_API_URL = "https://geocoding.geo.census.gov/geocoder/geographies/address"
 LONG_LAT_API_URL = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress"
 
 # TODO: Have the CSV get loaded on app run into memory to be referenced in the main.py
 # Load CSV data for service use - temporary
-tract_data = pd.read_csv("NRI_Table_CensusTracts_Washington.csv")
-tract_data_columns = pd.read_csv("NRIDataDictionary.csv")
+tract_data = pd.read_csv("geodeeper_service/NRI_Table_CensusTracts_Washington.csv")
+tract_data_columns = pd.read_csv("geodeeper_service/NRIDataDictionary.csv")
 
 # Consolidated function to get tract FIPS from address
 async def get_tract_fips_from_address(address: str) -> dict:

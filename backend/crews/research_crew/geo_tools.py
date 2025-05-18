@@ -1,9 +1,7 @@
 from typing import Any, Dict, List, Optional, Type
 from pydantic import BaseModel, Field
 from .tool_utils import AsyncBaseTool
-
-# Import geo_service functions
-from ../../geodeeper_service/geo_service import (
+from geodeeper_service.geo_service import (
     get_tract_fips_from_address,
     get_long_lat_from_address,
     get_tract_field_names,
