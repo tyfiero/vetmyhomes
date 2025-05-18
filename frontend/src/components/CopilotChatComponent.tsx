@@ -8,6 +8,7 @@ interface ActionExecutionStatus {
 	code?: string;
 	// Potentially other status fields
 }
+
 interface BaseMessage {
 	content?: string;
 	type?: string;
@@ -15,22 +16,31 @@ interface BaseMessage {
 	role?: "user" | "assistant" | "system" | "function" | "action"; // Expanded roles
 }
 
-interface ActionExecutionMessageShape extends BaseMessage {
+interface ActionExecutionMessage extends BaseMessage {
 	type: "ActionExecutionMessage";
 	name: string;
 	status: ActionExecutionStatus;
-	// args?: any; // If arguments are passed and used
-	// result?: any; // If result is part of the message
+	arguments?: {
+		query?: string;
+		[key: string]: unknown;
+	};
 }
 
-// A union type for more flexibility if other message types are possible
-type CopilotMessage = ActionExecutionMessageShape | BaseMessage;
+// Type guard function to check if a message is an ActionExecutionMessage
+function isActionExecutionMessage(
+	message: CopilotMessage,
+): message is ActionExecutionMessage {
+	return message.type === "ActionExecutionMessage";
+}
+
+// A union type for all possible message types
+type CopilotMessage = ActionExecutionMessage | BaseMessage;
 
 // Using 'any' for the message type as a temporary workaround for linter issues
 // with specific type imports from @copilotkit/react-core.
 // The structure of the message object (e.g., message.content) is assumed based on common patterns.
 export interface CopilotMessageRenderProps {
-	message: CopilotMessage; // Updated from any to CopilotMessage
+	message: CopilotMessage;
 }
 
 const CustomActionExecutionMessage: React.FC<CopilotMessageRenderProps> = ({
@@ -44,78 +54,62 @@ const CustomActionExecutionMessage: React.FC<CopilotMessageRenderProps> = ({
 	const [displayInfo, setDisplayInfo] = useState<string | null>(null);
 
 	useEffect(() => {
-		let taskName: string | undefined;
-		let currentStatus: string | undefined;
-		// Agent name from the message object itself, if available
-		// let agentDisplayName: string | undefined;
+		// Map agent names to user-friendly display names
+		const agentDisplayNames: Record<string, string> = {
+			real_estate_agent: "Real Estate Search",
+			property_analyzer: "Property Analysis",
+		};
 
-		if (message.type === "ActionExecutionMessage") {
-			// message is now narrowed to ActionExecutionMessageShape
-			taskName = message.name;
-			if (message.status && typeof message.status.code === "string") {
-				currentStatus = message.status.code;
+		if (isActionExecutionMessage(message)) {
+			const statusCode = message.status?.code?.toLowerCase();
+			const displayName = agentDisplayNames[message.name] || message.name;
+			const query = message.arguments?.query ? `: "${message.arguments.query}"` : "";
+
+			switch (statusCode) {
+				case "pending":
+					setDisplayInfo(`Searching properties${query}...`);
+					break;
+				case "success":
+					setDisplayInfo(`Found properties matching your criteria`);
+					break;
+				case "error":
+				case "failed":
+					setDisplayInfo(`Search failed. Please try again.`);
+					break;
+				default:
+					setDisplayInfo(`Processing your real estate search${query}`);
 			}
-			// The `execution_log.json` has a more descriptive agent name,
-			// but `message.name` (e.g., "real_estate_agent") is what we get here directly.
-			// We could potentially map `message.name` to a more friendly display name if needed.
-			// For now, we'll use message.name directly or a generic term.
-			// agentDisplayName = message.name; // Or a more generic term like "Agent"
 		} else if (typeof message.content === "string") {
-			// Fallback for BaseMessage or if content has JSON string with task details
 			try {
 				const parsedContent = JSON.parse(message.content);
 				if (parsedContent.task_name && parsedContent.status) {
-					taskName = parsedContent.task_name;
-					currentStatus = parsedContent.status;
-					// agentDisplayName = parsedContent.agent; // From parsed content
+					const status = parsedContent.status.toLowerCase();
+					
+					if (status === "started") {
+						setDisplayInfo(`Finding properties that match your criteria...`);
+					} else if (status === "completed" || status === "success") {
+						setDisplayInfo(`Found properties for you`);
+					} else if (status === "analyzing") {
+						setDisplayInfo(`Analyzing property matches...`);
+					} else {
+						setDisplayInfo(`Processing your search...`);
+					}
 				} else {
-					setDisplayInfo(message.content); // Show raw content if not the expected JSON
-					return;
+					setDisplayInfo(message.content);
 				}
 			} catch (e) {
-				// Content is not JSON or malformed, treat as plain text
 				console.log(e);
-
 				setDisplayInfo(message.content);
-				return;
 			}
 		} else {
-			// If message structure is not recognized or content is missing
-			setDisplayInfo("Processing action...");
-			return;
+			setDisplayInfo("Finding properties for you...");
 		}
-
-		if (taskName && currentStatus) {
-			let text = `Task: ${taskName}`;
-			// agentDisplayName is now derived from message.name for ActionExecutionMessage
-			// or from parsedContent.agent for the fallback.
-			// We'll use taskName as the agent identifier here for simplicity,
-			// as per the new understanding of ActionExecutionMessage structure.
-			// If you have a separate, more descriptive agent name to show, integrate it here.
-			text += ` - Status: ${currentStatus}`;
-			if (
-				currentStatus.toLowerCase() !== "completed" &&
-				currentStatus.toLowerCase() !== "success" && // Added 'success' based on logs
-				currentStatus.toLowerCase() !== "error" &&
-				currentStatus.toLowerCase() !== "failed"
-			) {
-				text += "...";
-			}
-			setDisplayInfo(text);
-		} else if (typeof message?.content === "string") {
-			// If parsing failed to find specific fields but content exists
-			setDisplayInfo(message.content);
-		} else if (taskName && !currentStatus) {
-			// If we have a task name but no status yet (e.g., initial pending)
-			setDisplayInfo(`Task: ${taskName} - Initializing...`);
-		}
-		// If displayInfo remains null, the render part will show a default message.
 	}, [message]);
 
 	if (!displayInfo) {
 		return (
 			<div className="text-sm text-neutral-600 dark:text-neutral-300 italic my-1 p-3">
-				Working on it...
+				Finding properties for you...
 			</div>
 		);
 	}
@@ -132,8 +126,8 @@ export function CopilotChatComponent() {
 		<CopilotChat
 			className="min-w-1/3 overflow-y-auto"
 			labels={{
-				title: "Popup Assistant",
-				initial: "👋 Hi, there! How can I help you today?",
+				title: "Real Estate Assistant",
+				initial: "👋 Hi! I can help you find properties that match your needs. How can I assist you today?",
 			}}
 			RenderActionExecutionMessage={CustomActionExecutionMessage}
 		/>
