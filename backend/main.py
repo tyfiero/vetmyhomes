@@ -5,7 +5,7 @@ from fastapi import APIRouter, BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl
 from realtor_router import router as realtor_router
-from crews.research_crew.crew_manager import kickoff_crew
+from crews.research_crew.crew_manager import kickoff_crew, ResearchCrew 
 
 # Import CopilotKit FastAPI integration
 from copilotkit.integrations.fastapi import add_fastapi_endpoint
@@ -33,16 +33,17 @@ app.add_middleware(
 
 # Include routers
 app.include_router(realtor_router)
-# sdk = CopilotKitRemoteEndpoint(
-#     agents=[
-#         CrewAIAgent(
-#             name="sample_agent",
-#             description="An example agent to use as a starting point for your own agent.",
-#             flow=AgenticChatFlow(),
-#         )
-#     ],
-# )
-# add_fastapi_endpoint(app, sdk, "/copilotkit")
+sdk = CopilotKitRemoteEndpoint(
+    agents=[
+        CrewAIAgent(
+            name="real_estate_agent",
+            description="An example agent to use as a starting point for your own agent.",
+            # flow=AgenticChatFlow(),
+            crew=ResearchCrew(),
+        )
+    ],
+)
+add_fastapi_endpoint(app, sdk, "/copilotkit")
 
 
 class PropertyUrlRequest(BaseModel):
