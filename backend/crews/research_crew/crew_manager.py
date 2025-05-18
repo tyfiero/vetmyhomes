@@ -1,11 +1,15 @@
 from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
-from crewai_tools import SerperDevTool
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List, Optional
 from pydantic import BaseModel, Field
 from crews.research_crew.realtor_tools import REALTOR_TOOLS
+from crews.research_crew.geo_tools import GEO_TOOLS
 from crews.research_crew.types import PropertyList
+from crews.research_crew.types import EnvironmentalRisks
+from crews.research_crew.map_tools import MAP_TOOLS
+
+# from crewai.tools import AddImageTool
 
 MODEL = "openai/gpt-4.1"
 # MODEL = "groq/llama3-70b-8192"
@@ -26,17 +30,26 @@ class ResearchCrew:
     def property_search(self) -> Agent:
         return Agent(
             config=self.agents_config["property_search"],  # type: ignore[index]
-            verbose=True,
+            # verbose=True,
             tools=REALTOR_TOOLS,
             # llm=llm,
             chat_llm=MODEL,
         )
 
     @agent
+    def geodeeper_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config["geodeeper_agent"],  # type: ignore[index]
+            verbose=True,
+            tools=GEO_TOOLS + MAP_TOOLS,
+            multimodal=True,
+        )
+
+    @agent
     def output_agent(self) -> Agent:
         return Agent(
             config=self.agents_config["output_agent"],  # type: ignore[index]
-            verbose=True,
+            # verbose=True,
         )
 
     @agent
@@ -60,12 +73,16 @@ class ResearchCrew:
         return Task(config=self.tasks_config["lifestyle_filter_task"])
 
     @task
-    def render_report(self) -> Task:
-        return Task(config=self.tasks_config["render_report"], output_json=PropertyList)
-    
+    def geo_analysis(self) -> Task:
+        return Task(config=self.tasks_config["geo_analysis"])  # type: ignore[index]
+
     @task
-    def summarize_properties_task(self) -> Task:
-        return Task(config=self.tasks_config["summarize_properties_task"])
+    def render_json(self) -> Task:
+        return Task(config=self.tasks_config["render_json"], output_json=PropertyList)
+
+    # @task
+    # def summarize_properties_task(self) -> Task:
+    #     return Task(config=self.tasks_config["summarize_properties_task"])
 
     # @task
     # def walkscore_task(self) -> Task:

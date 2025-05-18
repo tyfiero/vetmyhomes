@@ -15,11 +15,34 @@ property_search_task:
     - Do not overwhelm the user with too many properties.
     - Not all tools are necessary, use only the tools that are relevant to the search criteria.
 
-    If the query is ambiguous, ask the user for clarification.
+    If the query is ambiguous, ask the user for clarification. IF YOU RECEIVE ONLY AN ADDRESS, GO STRAIGHT INTO GEO ANALYSIS AND SKIP THIS STEP
   expected_output: >
     A well-structured list of property listings, each with rich metadata.
   agent: property_search
 
+geo_analysis:
+  description: >
+    Check out the provided {query} and do some analysis to find out what the geological risk is. You should create a structured json object.
+    You should first:
+    1. Take in the address and get the unique property track ID ('tract_fips')
+    2. Do a quick check of 'ERQK_RISKS' Earthquake Risk Index Score, 'WFIR_RISKS' Wildfire Risk Index Score, 'RFLD_RISKS' Riverine Flood Risk Index Score, 
+    'CFLD_RISKS' Coastal Flood Risk Index Score, 'LNDS_RISKS' Landslide Risk Index Score, using the get_geo_data tool using that newly acquired 'tract_fips' ID
+    3. If any of the RISK scores are high, we need to dig deeper and search for other field data info. e.g. if the ERQK Earthquake risk index score is high
+      3a.use the get_tract_field_names tool to identify all field names related (for this example it would start with 'ERQK')
+      3b. use the get_geo_data tool with the list of relevant field names you found to go get that data
+      3c. You can use the plot_map tool to get a topographic map of the area including fault lines. Use the add Image tool to analyze the map and provide a summary of the geological features in the area.
+      3d. Bring all this info into the JSON object as a subitem fo the corresponding parent field (e.g. ERQK_RISKS for this example)
+      3e. Add on "summary" item to the json under it explaining why it has that score and intelligently infering what is going on
+
+    Remember, you dont need to do a deep check into the RISK areas if the risk score is not very high. e.g. 90
+    The goal should be to have a clean JSON output with the main RISKS categories listed above, an if there is any additional info, they are child json items
+    YOU SHOULD ALWAYS RETURN THE QUICK CHECK FIELDS AND NOT STOP AT ONLY GETTING THE TRACT FIPS
+
+  expected_output: >
+    a JSON object containing the results of the basic check (risk scores) and it should also contain any additional info that was identified as child items
+  agent: geodeeper_agent
+
+render_json:
 lifestyle_filter_task:
   description: >
     If the user's query includes lifestyle preferences (e.g., gym, nightlife, restaurants), use the get_nearby_places tool to find those amenities around each property.
@@ -31,37 +54,74 @@ lifestyle_filter_task:
   context:
     - property_search_task
 
-
 render_report:
   description: >
     Analyze the property list and create json object with property list
   expected_output: >
     A JSON object containing the property list with the following structure:
     {
-      "properties": [
-        {
-          "address": "123 Main St",
-          "price": 100000,
-          "bedrooms": 3,
-          "bathrooms": 2,
-          "sqft": 1500,
-          "agent": "John Doe",
-          "agent_phone": "555-1234",
-          "agent_email": "john.doe@example.com",
-          "environmental_risk": "low",
-          "photos": [
-            "https://example.com/photo1.jpg",
-            "https://example.com/photo2.jpg",
-            "https://example.com/photo3.jpg"
-          ]
-        }
-      ]
-    }
-
+        "properties": [
+          {
+            "address": "123 Main St",
+            "price": 100000,
+            "bedrooms": 3,
+            "bathrooms": 2,
+            "sqft": 1500,
+            "agent": "John Doe",
+            "agent_phone": "555-1234",
+            "agent_email": "john.doe@example.com",
+            "tract_fips": "0558112234",
+            "fault_lines_map": "",
+            "environmental_risks": {
+              "earthquake": {
+                "level": "medium",
+                "description": "Moderate risk of earthquakes in this area.",
+                "score": 5.2,
+                "summary": "Some risk due to proximity to fault lines.",
+                "items": [
+                  {
+                    "code": "EQ1",
+                    "description": "Proximity to fault line",
+                    "value": 3.5
+                  },
+                  {
+                    "code": "EQ2",
+                    "description": "Historical earthquake frequency",
+                    "value": 1.7
+                  }
+                ]
+              },
+              "landslide": null,
+              "flood": {
+                "level": "low",
+                "description": "Low risk of flooding.",
+                "score": 2.1,
+                "summary": "Located outside floodplain.",
+                "items": [
+                  {
+                    "code": "FL1",
+                    "description": "Distance to nearest water body",
+                    "value": 0.5
+                  }
+                ]
+              },
+              "wildfire": null,
+              "hurricane": null,
+              "summary": "Overall, moderate environmental risks with some earthquake and minor flood risk."
+            },
+            "photos": [
+              "https://example.com/photo1.jpg",
+              "https://example.com/photo2.jpg",
+              "https://example.com/photo3.jpg"
+            ]
+          }
+        ]
+      }
   agent: output_agent
   output_file: output/property_list.json
   context:
     - property_search_task
+    - geo_analysis
     - lifestyle_filter_task
 
 summarize_properties_task:

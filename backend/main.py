@@ -13,8 +13,11 @@ from copilotkit.crewai import CrewAIAgent
 # Import CopilotKit FastAPI integration
 from copilotkit.integrations.fastapi import add_fastapi_endpoint
 from crews.research_crew.crew_manager import ResearchCrew, kickoff_crew
-from fastapi import BackgroundTasks, FastAPI
+import os
+from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi import APIRouter
 from pydantic import BaseModel, HttpUrl
 from realtor_router import router as realtor_router
 
@@ -33,8 +36,33 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Create maps router
+maps_router = APIRouter(prefix="/maps", tags=["maps"])
+
+
+@maps_router.get("/{filename}")
+async def get_map(filename: str):
+    """Serve map images from the maps directory"""
+    # Define the maps directory path
+    maps_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "maps")
+
+    # Create the maps directory if it doesn't exist
+    os.makedirs(maps_dir, exist_ok=True)
+
+    # Build the full path to the requested file
+    file_path = os.path.join(maps_dir, filename)
+
+    # Check if the file exists
+    if not os.path.isfile(file_path):
+        raise HTTPException(status_code=404, detail="Map not found")
+
+    # Return the file as a response
+    return FileResponse(file_path)
+
+
 # Include routers
 app.include_router(realtor_router)
+app.include_router(maps_router)
 sdk = CopilotKitRemoteEndpoint(
     agents=[
         CrewAIAgent(
@@ -86,7 +114,8 @@ async def test_dependencies():
 async def crew():
     return kickoff_crew(
         {
-            "query": "Recommend houses near gyms and restaraunts in Capitol hill"
+            "query": "Recommend houses in Capitol hill, Seattle, WA"
+            # "query": "3627 Stone Way N, Seattle, WA 98103"
         }
     )
     # return kickoff_crew(
