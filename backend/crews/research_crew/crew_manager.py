@@ -1,4 +1,4 @@
-from crewai import Agent, Crew, Process, Task
+from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
@@ -6,6 +6,13 @@ from typing import List
 from crews.research_crew.realtor_tools import REALTOR_TOOLS
 from crews.research_crew.geo_tools import GEO_TOOLS
 
+
+MODEL = "openai/gpt-4.1-mini"
+# MODEL = "groq/llama3-70b-8192"
+
+llm = LLM(
+    model=MODEL,
+)
 
 @CrewBase
 class ResearchCrew:
@@ -20,6 +27,8 @@ class ResearchCrew:
             config=self.agents_config["property_search"],  # type: ignore[index]
             verbose=True,
             tools=REALTOR_TOOLS,
+            # llm=llm,
+            chat_llm=MODEL
         )
 
     @agent
@@ -42,6 +51,10 @@ class ResearchCrew:
     def render_report(self) -> Task:
         return Task(config=self.tasks_config["render_report"])  # type: ignore[index]
 
+    # @task
+    # def walkscore_task(self) -> Task:
+    #     return Task(config=self.tasks_config["walkscore_task"])
+
     @crew
     def crew(self) -> Crew:
         """Creates the research crew"""
@@ -50,6 +63,8 @@ class ResearchCrew:
             tasks=self.tasks,
             process=Process.sequential,
             verbose=True,
+            # llm=llm,
+            chat_llm=MODEL
         )
 
 

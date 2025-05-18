@@ -4,7 +4,6 @@ It defines the workflow graph, state, tools, nodes and edges.
 """
 
 import json
-from typing_extensions import Literal
 from litellm import completion
 from crewai.flow.flow import Flow, start, router, listen
 

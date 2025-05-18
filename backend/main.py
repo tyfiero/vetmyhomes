@@ -5,7 +5,7 @@ from fastapi import APIRouter, BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl
 from realtor_router import router as realtor_router
-from crews.research_crew.crew_manager import kickoff_crew
+from crews.research_crew.crew_manager import kickoff_crew, ResearchCrew 
 
 # Import CopilotKit FastAPI integration
 from copilotkit.integrations.fastapi import add_fastapi_endpoint
@@ -14,6 +14,7 @@ from copilotkit import CopilotKitRemoteEndpoint, Action as CopilotAction
 # Keep the other imports for AgenticChatFlow if we want to use it later
 from copilotkit.crewai import CrewAIAgent
 from agentic_chat_flow import AgenticChatFlow
+
 
 app = FastAPI(
     title="VetMyHomes API",
@@ -35,9 +36,10 @@ app.include_router(realtor_router)
 sdk = CopilotKitRemoteEndpoint(
     agents=[
         CrewAIAgent(
-            name="sample_agent",
+            name="real_estate_agent",
             description="An example agent to use as a starting point for your own agent.",
-            flow=AgenticChatFlow(),
+            # flow=AgenticChatFlow(),
+            crew=ResearchCrew(),
         )
     ],
 )
@@ -82,9 +84,16 @@ async def test_dependencies():
 async def crew():
     return kickoff_crew(
         {
-            "query": "Find me 3-bedroom houses for sale in San Francisco under $1.5 million"
+            "query": "I want a house in Capitol hill, Seattle with 3 bedrooms and 2 bathrooms with a high walkscore"
         }
     )
+    # return kickoff_crew(
+    #     {
+    #     "address": "1119 8th Avenue Seattle WA 98101",
+    #     "latitude": 47.6085,
+    #     "longitude": -122.3295,
+    # }
+    # )
 
 
 @app.post("/extract-property")

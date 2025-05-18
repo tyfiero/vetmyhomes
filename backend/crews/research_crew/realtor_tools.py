@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Dict, Optional, Type
+from typing import Any, Dict, List, Optional, Type
 
 import httpx
 from config import settings
@@ -423,7 +423,7 @@ class GetPropertyDetailsTool(AsyncBaseTool):
         if url:
             params["url"] = url
 
-        return await call_rapid_api("/properties/detail", params)
+        return await call_rapid_api("/property/details", params)
 
 
 class GetPropertyPhotosInput(BaseModel):
@@ -451,7 +451,7 @@ class GetPropertyPhotosTool(AsyncBaseTool):
         if url:
             params["url"] = url
 
-        return await call_rapid_api("/properties/photos", params)
+        return await call_rapid_api("/property/photos", params)
 
 
 class GetPropertyEnvironmentRiskInput(BaseModel):
@@ -481,7 +481,7 @@ class GetPropertyEnvironmentRiskTool(AsyncBaseTool):
         if url:
             params["url"] = url
 
-        return await call_rapid_api("/properties/environment-risk", params)
+        return await call_rapid_api("/property/environment_risk", params)
 
 
 class GetSimilarHomesInput(BaseModel):
@@ -515,7 +515,7 @@ class GetSimilarHomesTool(AsyncBaseTool):
         if url:
             params["url"] = url
 
-        return await call_rapid_api("/properties/similar-homes", params)
+        return await call_rapid_api("/property/similar_homes", params)
 
 
 # -------------------- Housing Market Details Tool --------------------
@@ -555,6 +555,46 @@ class GetHousingMarketDetailsTool(AsyncBaseTool):
         return await call_rapid_api("/market/details", params)
 
 
+class WalkScoreInput(BaseModel):
+    """Input schema for fetching Walk Score."""
+    address: str = Field(..., description="Street address of the location")
+    latitude: float = Field(..., description="Latitude of the location")
+    longitude: float = Field(..., description="Longitude of the location")
+
+
+class WalkScoreTool(BaseTool):
+    name: str = "get_walkscore"
+    description: str = "Get Walk Score, Transit Score, and Bike Score for a given address and coordinates"
+    args_schema: Type[BaseModel] = WalkScoreInput
+
+    def _run(self, address: str, latitude: float, longitude: float) -> str:
+        """Call WalkScore API with address and coordinates."""
+        api_key = os.getenv("WALKSCORE_API_KEY")
+        if not api_key:
+            return "Missing WalkScore API key"
+
+        encoded_address = urllib.parse.quote(address)
+        url = (
+            f"https://api.walkscore.com/score"
+            f"?format=json&address={encoded_address}&lat={latitude}&lon={longitude}"
+            f"&wsapikey={api_key}"
+        )
+
+        try:
+            response = requests.get(url, timeout=10)
+            response.raise_for_status()
+            data = response.json()
+            return (
+                f"Walk Score: {data.get('walkscore')} ({data.get('description')})\n"
+                f"Transit Score: {data.get('transit', {}).get('score')} "
+                f"({data.get('transit', {}).get('description')})\n"
+                f"Bike Score: {data.get('bike', {}).get('score')} "
+                f"({data.get('bike', {}).get('description')})"
+            )
+        except Exception as e:
+            return f"Error fetching WalkScore: {e}"
+
+
 # List of all available tools
 REALTOR_TOOLS = [
     SearchForSaleTool(),
@@ -572,4 +612,5 @@ REALTOR_TOOLS = [
     GetPropertyEnvironmentRiskTool(),
     GetSimilarHomesTool(),
     GetHousingMarketDetailsTool(),
+    WalkScoreTool()
 ]
