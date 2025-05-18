@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 const CallToAction = () => {
 	return (
@@ -27,19 +28,12 @@ const CallToAction = () => {
 					</p>
 
 					<div className="flex flex-col sm:flex-row gap-4 justify-center">
-						<Button
-							size="lg"
-							className="bg-white text-sky-600 hover:bg-gray-100"
+						<Link
+							href="/simple"
+							className="bg-white text-sky-600 hover:bg-gray-100 rounded-md px-4 py-2"
 						>
 							Start Your Search
-						</Button>
-						<Button
-							size="lg"
-							variant="outline"
-							className="border-white text-white hover:bg-white/10"
-						>
-							Book a Demo
-						</Button>
+						</Link>
 					</div>
 				</div>
 			</div>

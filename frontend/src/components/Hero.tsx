@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const Hero = () => {
 	return (
@@ -25,14 +26,14 @@ const Hero = () => {
 						analyzes, and vets properties so you can make confident decisions.
 					</p>
 
-					<div className="flex justify-center mb-10">
-						<Button
-							size="lg"
+					<div className="flex justify-start mb-10">
+						<Link
+							href="/simple"
 							className="bg-sky-500 hover:bg-sky-600 text-white py-6 px-8 text-lg"
 						>
 							Start Now
 							<ArrowRight className="ml-2" />
-						</Button>
+						</Link>
 					</div>
 
 					<div className="flex flex-wrap gap-6 text-white">
