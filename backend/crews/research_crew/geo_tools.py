@@ -26,17 +26,21 @@ class GetLongLatFromAddressInput(BaseModel):
 
 class GetLongLatFromAddressTool(AsyncBaseTool):
     name: str = "get_long_lat_from_address"
-    description: str = "Get longitude and latitude for a given address using the US Census Geocoding API. Returns dict with longitude, latitude, and optionally tract_fips."
+    description: str = "Get longitude and latitude for a given address using the US Census Geocoding API. Returns only a dict with longitude, latitude"
     args_schema: Type[BaseModel] = GetLongLatFromAddressInput
 
-    async def run_async_code(self, address: str) -> Dict[str, Any]:
-        return await get_long_lat_from_address(address)
+    async def run_async_code(self) -> Dict[str, Any]:
+        return await get_long_lat_from_address()
 
 # -------------------- Tool: Get Tract Field Names --------------------
+
+class EmptyInput(BaseModel):
+    pass
+
 class GetTractFieldNamesTool(AsyncBaseTool):
     name: str = "get_tract_field_names"
     description: str = "Get the field names and aliases from the NRI data dictionary. Returns a list of dicts with 'field_name' and 'field_alias'."
-    args_schema: Type[BaseModel] = BaseModel  # No input required
+    args_schema: Type[BaseModel] = EmptyInput
 
     async def run_async_code(self) -> List[Dict[str, Any]]:
         return await get_tract_field_names()

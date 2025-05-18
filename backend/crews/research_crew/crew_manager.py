@@ -15,7 +15,6 @@ llm = LLM(
     model=MODEL,
 )
 
-
 @CrewBase
 class ResearchCrew:
     """Research crew for comprehensive topic analysis and reporting"""
@@ -27,23 +26,12 @@ class ResearchCrew:
     def property_search(self) -> Agent:
         return Agent(
             config=self.agents_config["property_search"],  # type: ignore[index]
-            verbose=True,
+            # verbose=True,
             tools=REALTOR_TOOLS,
             # llm=llm,
             chat_llm=MODEL,
         )
-
-    @agent
-    def output_agent(self) -> Agent:
-        return Agent(
-            config=self.agents_config["output_agent"],  # type: ignore[index]
-            verbose=True,
-        )
-
-    @agent
-    def summarizer(self) -> Agent:
-        return Agent(config=self.agents_config["summarizer"])
-
+    
     @agent
     def geodeeper_agent(self) -> Agent:
         return Agent(
@@ -51,6 +39,19 @@ class ResearchCrew:
             verbose=True,
             tools=GEO_TOOLS,
         )
+
+    @agent
+    def output_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config["output_agent"],  # type: ignore[index]
+            # verbose=True,
+        )
+
+    @agent
+    def summarizer(self) -> Agent:
+        return Agent(config=self.agents_config["summarizer"])
+
+
     
     @task
     def property_search_task(self) -> Task:
@@ -83,7 +84,6 @@ class ResearchCrew:
             # llm=llm,
             chat_llm=MODEL,
         )
-
 
 def kickoff_crew(inputs):
     crew = ResearchCrew()

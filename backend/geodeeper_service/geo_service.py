@@ -91,10 +91,9 @@ async def get_tract_field_names() -> list[dict]:
         list[dict]: List of {"field_name": ..., "field_alias": ...}
     """
     try:
-        data_dict = pd.read_csv("NRIDataDictionary.csv")
         return [
             {"field_name": row["Field Name"], "field_alias": row["Field Alias"]}
-            for _, row in data_dict.iterrows()
+            for _, row in tract_data_columns.iterrows()
         ]
     except Exception as e:
         return []

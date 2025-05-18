@@ -32,6 +32,7 @@ class Property(BaseModel):
     agent: str = Field(..., description="Real estate agent name")
     agent_phone: str = Field(..., description="Real estate agent phone number")
     agent_email: str = Field(..., description="Real estate agent email address")
+    tract_fips: str = Field(..., description="Census Tract FIPS code")
     environmental_risks: EnvironmentalRisks = Field(
         ..., description="Detailed environmental risks by type"
     )

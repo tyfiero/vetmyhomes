@@ -36,7 +36,8 @@ render_report:
           "agent": "John Doe",
           "agent_phone": "555-1234",
           "agent_email": "john.doe@example.com",
-          "environmental_risk": "low",
+          "environmental_risk": "",
+          "tract_fips": '0558112234'
           "photos": [
             "https://example.com/photo1.jpg",
             "https://example.com/photo2.jpg",
