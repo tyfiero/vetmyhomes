@@ -1,55 +1,30 @@
+```json
 {
   "properties": [
     {
-      "address": "421 16th Ave E, Seattle, WA 98112",
-      "price": 1750000,
-      "bedrooms": 4,
+      "address": "2137 E Shelby St, Seattle, WA 98112",
+      "price": 1275000,
+      "bedrooms": 3,
       "bathrooms": 2,
-      "sqft": 3030,
-      "agent": "Kelly Weisfield, COMPASS Bellevue",
-      "agent_phone": "425-242-6440",
-      "agent_email": "kellyw@windermere.com",
-      "environmental_risk": "low", 
-      "photos": [
-        "https://ap.rdcpix.com/8621500e4ae2574f58dda0e823b66dd6l-m2574217271s.jpg",
-        "https://ap.rdcpix.com/8621500e4ae2574f58dda0e823b66dd6l-m243299330s.jpg",
-        "https://ap.rdcpix.com/8621500e4ae2574f58dda0e823b66dd6l-m708540379s.jpg"
-      ]
-    },
-    {
-      "address": "3307 E Mercer St, Seattle, WA 98112",
-      "price": 2000000,
-      "bedrooms": 3,
-      "bathrooms": 3,
-      "sqft": 2895,
-      "agent": "Windermere Real Estate Midtown",
+      "sqft": null,
+      "agent": null,
       "agent_phone": null,
       "agent_email": null,
-      "environmental_risk": "low",
-      "photos": [
-        "https://ap.rdcpix.com/777a69d4a8358a5bf05ba7eaf6563665l-m223924641s.jpg",
-        "https://ap.rdcpix.com/777a69d4a8358a5bf05ba7eaf6563665l-m1459905530s.jpg"
-      ]
+      "environmental_risk": null,
+      "photos": []
     },
     {
-      "address": "1639 37th Ave, Seattle, WA 98122",
-      "price": 1999000,
-      "bedrooms": 3,
+      "address": "101 NE 62nd St, Seattle, WA 98115",
+      "price": 2400000,
+      "bedrooms": 4,
       "bathrooms": 3.5,
-      "sqft": 2680,
-      "agent": "RE MAX Metro Realty",
+      "sqft": null,
+      "agent": null,
       "agent_phone": null,
       "agent_email": null,
-      "environmental_risk": "low",
-      "photos": [
-        "https://ap.rdcpix.com/cf5ed0b6685a7caa85d3dc224ea182cel-m3558284051s.jpg",
-        "https://ap.rdcpix.com/cf5ed0b6685a7caa85d3dc224ea182cel-m2469679941s.jpg"
-      ]
+      "environmental_risk": null,
+      "photos": []
     }
-  ],
-  "market_trends": {
-    "median_listing_price": "around $800k–$950k (Seattle, early 2024)",
-    "price_per_sqft": "$600–$950 depending on property type and location",
-    "market_activity": "Weekend open houses are common. Days on market for well-priced homes remain relatively low."
-  }
+  ]
 }
+```

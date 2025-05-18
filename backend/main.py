@@ -83,7 +83,7 @@ async def test_dependencies():
 async def crew():
     return kickoff_crew(
         {
-            "query": "I want a house in Capitol hill, Seattle with 3 bedrooms and 2 bathrooms"
+            "query": "I want a house in Capitol hill, Seattle with 3 bedrooms and 2 bathrooms with a high walkscore"
         }
     )
     # return kickoff_crew(
