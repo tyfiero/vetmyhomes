@@ -65,5 +65,3 @@ geo_analysis:
     a JSON object containing the results of the basic check (risk scores) and it should also contain any additional info that was identified as child items
 
   agent: geodeeper_agent
-  context:
-    - geo_analysis_task

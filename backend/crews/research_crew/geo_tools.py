@@ -1,46 +1,14 @@
 from typing import Any, Dict, List, Optional, Type
 from pydantic import BaseModel, Field
-from crewai.tools import BaseTool
-from concurrent.futures import ThreadPoolExecutor
-import asyncio
+from .tool_utils import AsyncBaseTool
 
 # Import geo_service functions
-from geodeeper_service.geo_service import (
+from ../../geodeeper_service/geo_service import (
     get_tract_fips_from_address,
     get_long_lat_from_address,
     get_tract_field_names,
     get_geo_data,
 )
-
-# TODO: Move this into a utils file and re-use it in the realtor_tools.py file too
-class AsyncBaseTool(BaseTool):
-    def _run(self, *args, **kwargs):
-        try:
-            loop = asyncio.get_event_loop()
-            if loop.is_running():
-                with ThreadPoolExecutor() as executor:
-                    future = executor.submit(self._run_in_new_loop, *args, **kwargs)
-                    return future.result()
-            else:
-                return loop.run_until_complete(self.run_async_code(*args, **kwargs))
-        except RuntimeError:
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            try:
-                return loop.run_until_complete(self.run_async_code(*args, **kwargs))
-            finally:
-                loop.close()
-
-    def _run_in_new_loop(self, *args, **kwargs):
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            return loop.run_until_complete(self.run_async_code(*args, **kwargs))
-        finally:
-            loop.close()
-
-    async def run_async_code(self, *args, **kwargs):
-        raise NotImplementedError("Subclasses must implement run_async_code")
 
 # -------------------- Tool: Get Tract FIPS from Address --------------------
 class GetTractFipsFromAddressInput(BaseModel):

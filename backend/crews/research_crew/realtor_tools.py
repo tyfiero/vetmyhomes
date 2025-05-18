@@ -4,8 +4,7 @@ from typing import Any, Dict, Optional, Type
 import httpx
 from config import settings
 from pydantic import BaseModel, Field
-from tool_utils import AsyncBaseTool
-
+from .tool_utils import AsyncBaseTool
 
 # Base URL for RapidAPI Realtor API
 BASE_URL = "https://realtor16.p.rapidapi.com"
