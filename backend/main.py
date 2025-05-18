@@ -99,7 +99,7 @@ async def root():
     return {"status": "ok", "message": "VetMyHomes API is running"}
 
 
-@app.get("/info")
+@app.api_route(["GET", "POST"], "/info")
 async def info():
     """Get API information"""
     return JSONResponse({
