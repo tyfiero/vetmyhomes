@@ -1,168 +1,122 @@
 import React from "react";
 import { CopilotChat } from "@copilotkit/react-ui";
-// import type { Message as CopilotMessageType } from "@copilotkit/react-core"; // Attempted this, but still faced linter issues.
-import { useEffect, useState } from "react";
 import { useCoAgentStateRender, useCopilotAction } from "@copilotkit/react-core";
 
-// Define a more specific type for the message object
-interface ActionExecutionStatus {
-	code?: string;
-	// Potentially other status fields
-}
-
-interface BaseMessage {
-	content?: string;
-	type?: string;
-	id?: string;
-	role?: "user" | "assistant" | "system" | "function" | "action"; // Expanded roles
-}
-
-interface ActionExecutionMessage extends BaseMessage {
-	type: "ActionExecutionMessage";
-	name: string;
-	status: ActionExecutionStatus;
-	arguments?: {
-		query?: string;
-		[key: string]: unknown;
-	};
-}
-
-// Type guard function to check if a message is an ActionExecutionMessage
-function isActionExecutionMessage(
-	message: CopilotMessage,
-): message is ActionExecutionMessage {
-	return message.type === "ActionExecutionMessage";
-}
-
-// A union type for all possible message types
-type CopilotMessage = ActionExecutionMessage | BaseMessage;
-
-// Using 'any' for the message type as a temporary workaround for linter issues
-// with specific type imports from @copilotkit/react-core.
-// The structure of the message object (e.g., message.content) is assumed based on common patterns.
-export interface CopilotMessageRenderProps {
-	message: CopilotMessage;
-}
-
-// const CustomActionExecutionMessage: React.FC<CopilotMessageRenderProps> = ({
-// 	message,
-// }) => {
-// 	console.log(
-// 		"RenderActionExecutionMessage received:",
-// 		JSON.stringify(message, null, 2),
-// 	);
-
-// 	const [displayInfo, setDisplayInfo] = useState<string | null>(null);
-
-//     useCopilotAction({
-//         name: "*",
-//         render: ({args, name, status}: any) => {
-//             console.log("Action received:", args, name, status);
-//             return <div className="bg-blue-500">Action received: {name}</div>;
-//         }
-//     })
-
-// 	// useEffect(() => {
-// 	// 	// Map agent names to user-friendly display names
-// 	// 	const agentDisplayNames: Record<string, string> = {
-// 	// 		real_estate_agent: "Real Estate Search",
-// 	// 		property_analyzer: "Property Analysis",
-// 	// 	};
-
-// 	// 	if (isActionExecutionMessage(message)) {
-// 	// 		const statusCode = message.status?.code?.toLowerCase();
-// 	// 		const displayName = agentDisplayNames[message.name] || message.name;
-// 	// 		const query = message.arguments?.query ? `: "${message.arguments.query}"` : "";
-
-// 	// 		switch (statusCode) {
-// 	// 			case "pending":
-// 	// 				setDisplayInfo(`Searching properties${query}...`);
-// 	// 				break;
-// 	// 			case "success":
-// 	// 				setDisplayInfo(`Found properties matching your criteria`);
-// 	// 				break;
-// 	// 			case "error":
-// 	// 			case "failed":
-// 	// 				setDisplayInfo(`Search failed. Please try again.`);
-// 	// 				break;
-// 	// 			default:
-// 	// 				setDisplayInfo(`Processing your real estate search${query}`);
-// 	// 		}
-// 	// 	} else if (typeof message.content === "string") {
-// 	// 		try {
-// 	// 			const parsedContent = JSON.parse(message.content);
-// 	// 			if (parsedContent.task_name && parsedContent.status) {
-// 	// 				const status = parsedContent.status.toLowerCase();
-					
-// 	// 				if (status === "started") {
-// 	// 					setDisplayInfo(`Finding properties that match your criteria...`);
-// 	// 				} else if (status === "completed" || status === "success") {
-// 	// 					setDisplayInfo(`Found properties for you`);
-// 	// 				} else if (status === "analyzing") {
-// 	// 					setDisplayInfo(`Analyzing property matches...`);
-// 	// 				} else {
-// 	// 					setDisplayInfo(`Processing your search...`);
-// 	// 				}
-// 	// 			} else {
-// 	// 				setDisplayInfo(message.content);
-// 	// 			}
-// 	// 		} catch (e) {
-// 	// 			console.log(e);
-// 	// 			setDisplayInfo(message.content);
-// 	// 		}
-// 	// 	} else {
-// 	// 		setDisplayInfo("Finding properties for you...");
-// 	// 	}
-// 	// }, [message]);
-
-//     useCoAgentStateRender({
-//         name: "real_estate_agent",
-//         render: (state) => {
-//             console.log("State received:", state);
-//             return <div className="bg-green-500">State received: {JSON.stringify(state)}</div>;
-//         }
-//     })
-
-// 	if (!displayInfo) {
-// 		return (
-// 			<div className="text-sm text-neutral-600 dark:text-neutral-300 italic my-1 p-3">
-// 				Finding properties for you...
-// 			</div>
-// 		);
-// 	}
-
-// 	return (
-// 		<div className="text-sm text-neutral-700 dark:text-neutral-200 my-1 p-3 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm">
-// 			{displayInfo}
-// 		</div>
-// 	);
-// };
-
+// Main component for the chat interface
 export function CopilotChatComponent() {
-    useCopilotAction({
-        name: "*",
-        render: ({args, name, status}: any) => {
-            console.log("Action received:", args, name, status);
-            return <div className="bg-blue-500">Action received: {name}</div>;
-        }
-    })
+  // Agent renderers - matching the agent names from CrewAI
+  const agentNames = [
+    { id: "Real_Estate_Property_Searcher", displayName: "Property Search" },
+    { id: "Local_Amenity_Finder", displayName: "Amenity Finder" },
+    { id: "property_search", displayName: "Property Search" },
+    { id: "lifestyle_filter", displayName: "Lifestyle Filter" },
+    { id: "output_agent", displayName: "Output Agent" },
+    { id: "Real_Estate_Property_Output_Agent", displayName: "Output Agent" },
+    { id: "Real_Estate_Summary_Expert", displayName: "Summary Expert" },
+    { id: "summarizer", displayName: "Summary Expert" }
+  ];
 
+  // Register all agents to maximize chance of capturing state
+  agentNames.forEach(({ id, displayName }) => {
     useCoAgentStateRender({
-        name: "real_estate_agent",
-        render: (state) => {
-            console.log("State received:", state);
-            return <div className="bg-green-500">State received: {JSON.stringify(state)}</div>;
+      name: id,
+      render: (props: any) => {
+        const { status, state } = props;
+        console.log(`${displayName} state update:`, { status, state });
+        
+        // Display different UI based on state
+        if (state) {
+          return (
+            <div className="text-xs my-1 p-2 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-md">
+              <div className="font-medium text-blue-700 dark:text-blue-300">{displayName}</div>
+              <div className="text-blue-600 dark:text-blue-400">
+                {state.message || state.statusMessage || `Status: ${status}`}
+                {state.thought && (
+                  <div className="mt-1 italic text-xs">{state.thought}</div>
+                )}
+                {state.tool_name && (
+                  <div className="mt-1 text-xs font-mono">Using: {state.tool_name}</div>
+                )}
+              </div>
+            </div>
+          );
         }
-    })
+        return null;
+      }
+    });
+  });
 
-	return (
-		<CopilotChat
-			className="min-w-1/3 overflow-y-auto"
-			labels={{
-				title: "Real Estate Assistant",
-				initial: "👋 Hi! I can help you find properties that match your needs. How can I assist you today?",
-			}}
-			// RenderActionExecutionMessage={CustomActionExecutionMessage}
-		/>
-	);
+  // Catch all action renderer for any tools used
+  useCopilotAction({
+    name: "*",
+    render: (props: any) => {
+      const name = props.args?.name || "Unknown Tool";
+      const status = props.status;
+      const args = props.args || {};
+      
+      console.log(`Action update:`, { name, status, args });
+      
+      return (
+        <div className="text-xs my-1 p-2 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-md">
+          <div className="font-medium text-green-700 dark:text-green-300">Tool: {name}</div>
+          <div className="text-green-600 dark:text-green-400">
+            Status: {status}
+            {Object.keys(args).length > 0 && (
+              <div className="mt-1 text-xs font-mono overflow-hidden text-ellipsis">
+                {JSON.stringify(args).substring(0, 100)}
+                {JSON.stringify(args).length > 100 ? "..." : ""}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+  });
+
+  // Specific tool renderers for CrewAI common tools
+  const toolNames = [
+    "search_properties_for_sale",
+    "get_nearby_places",
+    "get_lifestyle_amenities",
+    "get_property_details",
+    "generate_summary"
+  ];
+
+  toolNames.forEach(toolName => {
+    useCopilotAction({
+      name: toolName,
+      render: (props: any) => {
+        console.log(`${toolName} action update:`, props);
+        
+        let statusEmoji = "⏳";
+        let statusClass = "bg-blue-50 dark:bg-blue-900 border-blue-200 dark:border-blue-700";
+        
+        if (props.status === "executing" || props.status === "inProgress") {
+          statusEmoji = "🔄";
+        } else if (props.status === "complete") {
+          statusEmoji = "✅";
+          statusClass = "bg-green-50 dark:bg-green-900 border-green-200 dark:border-green-700";
+        }
+        
+        return (
+          <div className={`text-xs my-1 p-2 ${statusClass} border rounded-md`}>
+            <div className="font-medium">{statusEmoji} {toolName.replace(/_/g, " ")}</div>
+            <div className="mt-1 text-xs">
+              Status: {props.status}
+            </div>
+          </div>
+        );
+      }
+    });
+  });
+
+  return (
+    <CopilotChat
+      className="min-w-1/3 overflow-y-auto h-full"
+      labels={{
+        title: "Real Estate Assistant",
+        initial: "👋 Hi! I can help you find properties that match your needs. How can I assist you today?",
+      }}
+    />
+  );
 }
