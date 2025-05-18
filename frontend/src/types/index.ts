@@ -19,6 +19,7 @@ export type EnvironmentalRisks = {
 	wildfire: EnvironmentalRiskDetail | null;
 	hurricane: EnvironmentalRiskDetail | null;
 	summary: string;
+	fault_lines_map?: string;
 };
 
 export type PropertyDetail = {
@@ -32,7 +33,7 @@ export type PropertyDetail = {
 	agent_email: string;
 	tract_fips: string;
 	environmental_risks: EnvironmentalRisks;
-	photos: string[];
+	photos: string[];	
 };
 
 // State of the agent, make sure this aligns with your agent's state.

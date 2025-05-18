@@ -203,6 +203,7 @@ const PropertyCard = ({ property }: { property: PropertyDetail }) => {
 							Overall Summary: {property.environmental_risks.summary}
 						</p>
 					)}
+					
 					{renderEnvironmentalRiskDetail(
 						"earthquake",
 						property.environmental_risks.earthquake,
@@ -228,6 +229,20 @@ const PropertyCard = ({ property }: { property: PropertyDetail }) => {
 						property.environmental_risks.hurricane,
 						"🌀", // Placeholder icon
 					)}
+					{property.environmental_risks.fault_lines_map && (
+						<div className="mb-4">
+						<h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+							Fault Lines Map
+						</h5>
+						<div className="relative w-full h-48 overflow-hidden rounded-md shadow-md">
+							<img 
+								src={`http://localhost:8000/${property.environmental_risks.fault_lines_map}`} 
+								alt="Fault Lines Map"
+								className="w-full h-full object-cover"
+							/>
+						</div>
+					</div>
+						)}
 				</div>
 			</div>
 		</div>

@@ -12,6 +12,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi import APIRouter
 from pydantic import BaseModel, HttpUrl, Field
 from realtor_router import router as realtor_router
+import uvicorn
 
 app = FastAPI(
     title="VetMyHomes API",

@@ -4,9 +4,15 @@ import { useState } from "react";
 import PropertyCard from "../../components/PropertyCard";
 import type { PropertyDetail } from "../../types";
 
+interface PropertyResponse {
+	properties: PropertyDetail[];
+	summary?: string;
+}
+
 export default function SimplePage() {
 	const [inputValue, setInputValue] = useState<string>("");
 	const [properties, setProperties] = useState<PropertyDetail[] | null>(null);
+	const [summary, setSummary] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -14,6 +20,7 @@ export default function SimplePage() {
 		setIsLoading(true);
 		setError(null);
 		setProperties(null);
+		setSummary(null);
 
 		try {
 			const response = await fetch(
@@ -36,10 +43,15 @@ export default function SimplePage() {
 				);
 			}
 
-			const data = await response.json();
-			// Assuming the API returns an object with a 'properties' key
+			const data: PropertyResponse = await response.json();
+			// Process the response data
 			if (data?.properties) {
 				setProperties(data.properties);
+				
+				// Set summary if available
+				if (data.summary) {
+					setSummary(data.summary);
+				}
 			} else {
 				// If the structure is different, e.g., data is directly the array
 				// setProperties(data);
@@ -144,6 +156,12 @@ export default function SimplePage() {
 
 			{properties && properties.length > 0 && (
 				<div className="mt-8">
+					{summary && (
+						<div className="max-w-4xl mx-auto mb-6 p-4 bg-slate-700/70 backdrop-blur-md rounded-lg shadow-lg">
+							<h2 className="text-xl font-semibold text-sky-400 mb-2">Summary</h2>
+							<p className="text-slate-200 leading-relaxed">{summary}</p>
+						</div>
+					)}
 					<h2 className="text-2xl font-semibold text-sky-400 mb-4 text-center">
 						Available Properties:
 					</h2>
