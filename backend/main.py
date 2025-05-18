@@ -32,16 +32,16 @@ app.add_middleware(
 
 # Include routers
 app.include_router(realtor_router)
-sdk = CopilotKitRemoteEndpoint(
-    agents=[
-        CrewAIAgent(
-            name="sample_agent",
-            description="An example agent to use as a starting point for your own agent.",
-            flow=AgenticChatFlow(),
-        )
-    ],
-)
-add_fastapi_endpoint(app, sdk, "/copilotkit")
+# sdk = CopilotKitRemoteEndpoint(
+#     agents=[
+#         CrewAIAgent(
+#             name="sample_agent",
+#             description="An example agent to use as a starting point for your own agent.",
+#             flow=AgenticChatFlow(),
+#         )
+#     ],
+# )
+# add_fastapi_endpoint(app, sdk, "/copilotkit")
 
 
 class PropertyUrlRequest(BaseModel):
@@ -82,7 +82,7 @@ async def test_dependencies():
 async def crew():
     return kickoff_crew(
         {
-            "query": "Find me 3-bedroom houses for sale in San Francisco under $1.5 million"
+            "query": "I want a house in Capitol hill, Seattle with 3 bedrooms and 2 bathrooms"
         }
     )
 

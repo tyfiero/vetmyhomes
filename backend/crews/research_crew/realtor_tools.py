@@ -465,7 +465,7 @@ class GetPropertyDetailsTool(AsyncBaseTool):
         if url:
             params["url"] = url
 
-        return await call_rapid_api("/properties/detail", params)
+        return await call_rapid_api("/property/details", params)
 
 
 class GetPropertyPhotosInput(BaseModel):
@@ -493,7 +493,7 @@ class GetPropertyPhotosTool(AsyncBaseTool):
         if url:
             params["url"] = url
 
-        return await call_rapid_api("/properties/photos", params)
+        return await call_rapid_api("/property/photos", params)
 
 
 class GetPropertyEnvironmentRiskInput(BaseModel):
@@ -523,7 +523,7 @@ class GetPropertyEnvironmentRiskTool(AsyncBaseTool):
         if url:
             params["url"] = url
 
-        return await call_rapid_api("/properties/environment-risk", params)
+        return await call_rapid_api("/property/environment_risk", params)
 
 
 class GetSimilarHomesInput(BaseModel):
@@ -557,7 +557,7 @@ class GetSimilarHomesTool(AsyncBaseTool):
         if url:
             params["url"] = url
 
-        return await call_rapid_api("/properties/similar-homes", params)
+        return await call_rapid_api("/property/similar_homes", params)
 
 
 # -------------------- Housing Market Details Tool --------------------
