@@ -2,17 +2,18 @@ from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
 from crewai_tools import SerperDevTool
 from crewai.agents.agent_builder.base_agent import BaseAgent
-from typing import List
-
+from typing import List, Optional
+from pydantic import BaseModel, Field
 from crews.research_crew.realtor_tools import REALTOR_TOOLS
+from crews.research_crew.types import PropertyList
 
-
-MODEL = "openai/gpt-4.1-mini"
+MODEL = "openai/gpt-4.1"
 # MODEL = "groq/llama3-70b-8192"
 
 llm = LLM(
     model=MODEL,
 )
+
 
 @CrewBase
 class ResearchCrew:
@@ -28,7 +29,14 @@ class ResearchCrew:
             verbose=True,
             tools=REALTOR_TOOLS,
             # llm=llm,
-            chat_llm=MODEL
+            chat_llm=MODEL,
+        )
+
+    @agent
+    def output_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config["output_agent"],  # type: ignore[index]
+            verbose=True,
         )
 
     @task
@@ -37,7 +45,7 @@ class ResearchCrew:
 
     @task
     def render_report(self) -> Task:
-        return Task(config=self.tasks_config["render_report"])  # type: ignore[index]
+        return Task(config=self.tasks_config["render_report"], output_json=PropertyList)  # type: ignore[index]
 
     # @task
     # def walkscore_task(self) -> Task:
@@ -52,7 +60,7 @@ class ResearchCrew:
             process=Process.sequential,
             verbose=True,
             # llm=llm,
-            chat_llm=MODEL
+            chat_llm=MODEL,
         )
 
 

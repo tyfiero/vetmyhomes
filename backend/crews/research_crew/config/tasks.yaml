@@ -18,7 +18,6 @@ property_search_task:
     If the query is ambiguous, ask the user for clarification.
   expected_output: >
     A well-structured list of property listings, each with rich metadata.
-    For selected listings, include a formatted section summarizing Walk Score data.
   agent: property_search
 
 render_report:
@@ -47,7 +46,7 @@ render_report:
       ]
     }
 
-  agent: property_search
+  agent: output_agent
   output_file: output/property_list.json
   context:
     - property_search_task
