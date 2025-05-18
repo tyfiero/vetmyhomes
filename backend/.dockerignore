@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+.env
+.venv
+env/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose*.yml
+
+# Git
+.git
+.gitignore
+
+# Application specific
+maps/
+logs/
+*.log
+output/
+data/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Node.js (if you have any frontend code)
+node_modules/
+npm-debug.log
+maps

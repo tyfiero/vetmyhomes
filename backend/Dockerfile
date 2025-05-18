@@ -6,11 +6,24 @@ FROM python:3.11-slim
 # Set the working directory in the container
 WORKDIR /app
 
+# Install system dependencies for GDAL and other geospatial libraries
+RUN apt-get update && apt-get install -y \
+    gdal-bin \
+    libgdal-dev \
+    gcc \
+    g++ 
+
+# Set GDAL environment variables
+ENV GDAL_VERSION=3.6.2
+ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
+ENV C_INCLUDE_PATH=/usr/include/gdal
+
 # Install uv (a fast Python package installer)
 RUN pip install uv
 
 # Copy the dependencies file to the working directory
 COPY requirements.txt .
+COPY requirements.lock .
 
 # Install any needed packages specified in requirements.txt
 # Using uv for faster installation
