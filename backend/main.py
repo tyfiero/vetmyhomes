@@ -15,7 +15,6 @@ from copilotkit import CopilotKitRemoteEndpoint, Action as CopilotAction
 from copilotkit.crewai import CrewAIAgent
 from agentic_chat_flow import AgenticChatFlow
 
-from crews.test_crew.crew_manager import kickoff_crew
 
 app = FastAPI(
     title="VetMyHomes API",
@@ -87,6 +86,13 @@ async def crew():
             "query": "Find me 3-bedroom houses for sale in San Francisco under $1.5 million"
         }
     )
+    # return kickoff_crew(
+    #     {
+    #     "address": "1119 8th Avenue Seattle WA 98101",
+    #     "latitude": 47.6085,
+    #     "longitude": -122.3295,
+    # }
+    # )
 
 
 @app.post("/extract-property")

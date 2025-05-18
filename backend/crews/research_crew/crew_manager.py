@@ -30,6 +30,10 @@ class ResearchCrew:
     def render_report(self) -> Task:
         return Task(config=self.tasks_config["render_report"])  # type: ignore[index]
 
+    # @task
+    # def walkscore_task(self) -> Task:
+    #     return Task(config=self.tasks_config["walkscore_task"])
+
     @crew
     def crew(self) -> Crew:
         """Creates the research crew"""
