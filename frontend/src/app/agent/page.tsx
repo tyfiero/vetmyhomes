@@ -1,40 +1,51 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useCoAgent, useCopilotAction, useCoAgentStateRender } from "@copilotkit/react-core";
+import { useCoAgent, useCoAgentStateRender } from "@copilotkit/react-core";
 import { useEffect, useState } from "react";
 import { CopilotChatComponent } from "@/components/CopilotChatComponent";
 
+// State of the agent, make sure this aligns with your agent's state.
+type AgentState = {
+	properties: string[];
+	outputs?: string;
+};
+
 // Create a more user-friendly state renderer component
-const RealEstateStateRenderer = ({ state, status }: { state: any, status: string }) => {
+const RealEstateStateRenderer = ({
+	state,
+	status,
+}: { state: AgentState | null; status: string }) => {
 	if (!state) return null;
-	
+
 	// Get property count from outputs if properties array is empty
 	const getPropertyCount = () => {
 		if (state.properties && state.properties.length > 0) {
 			return state.properties.length;
 		}
-		
+
 		// Try to extract property count from outputs if it contains JSON
 		if (state.outputs && state.outputs.includes('"properties":')) {
 			const match = state.outputs.match(/"properties":\s*\[\s*({[^}]+})/);
 			if (match) return "found properties";
 		}
-		
+
 		return null;
 	};
-	
+
 	// Show different messages based on status
 	const getStatusMessage = () => {
 		if (status === "pending") return "Searching for properties...";
 		if (status === "success") {
 			const count = getPropertyCount();
-			return count ? `Found ${count}` : "Found properties matching your criteria";
+			return count
+				? `Found ${count}`
+				: "Found properties matching your criteria";
 		}
 		if (status === "error") return "Error finding properties";
 		return "Processing your request...";
 	};
-	
+
 	return (
 		<div className="w-full p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg mb-3">
 			<p className="text-sm font-medium">{getStatusMessage()}</p>
@@ -81,14 +92,9 @@ export default function CopilotKitPage() {
 	);
 }
 
-// State of the agent, make sure this aligns with your agent's state.
-type AgentState = {
-	properties: string[];
-	outputs?: string;
-};
-
 function MainContent({ themeColor }: { themeColor: string }): ReactNode {
 	// 🪁 Shared State: https://docs.copilotkit.ai/coagents/shared-state
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { state, setState } = useCoAgent<AgentState>({
 		name: "real_estate_agent",
 		initialState: {
@@ -96,34 +102,41 @@ function MainContent({ themeColor }: { themeColor: string }): ReactNode {
 			outputs: "",
 		},
 	});
-	
+
 	// Extract properties from outputs if needed
 	useEffect(() => {
 		console.log(state);
-		
+
 		// If we have outputs but no properties, try to extract properties
-		if (state?.outputs && (!state.properties || state.properties.length === 0)) {
+		if (
+			state?.outputs &&
+			(!state.properties || state.properties.length === 0)
+		) {
 			try {
 				// Look for JSON property definitions in the output
-				const propertyMatch = state.outputs.match(/"properties":\s*\[([\s\S]*?)\]/);
+				const propertyMatch = state.outputs.match(
+					/"properties":\s*\[([\s\S]*?)\]/,
+				);
 				if (propertyMatch && propertyMatch[1]) {
 					// Extract individual properties
 					const propertyText = propertyMatch[1];
 					const addresses: string[] = [];
-					
+
 					// Extract addresses from the property text
-					const addressMatches = propertyText.matchAll(/"address":\s*"([^"]+)"/g);
+					const addressMatches = propertyText.matchAll(
+						/"address":\s*"([^"]+)"/g,
+					);
 					for (const match of addressMatches) {
 						if (match[1]) {
 							addresses.push(match[1]);
 						}
 					}
-					
+
 					// Update state with extracted properties if found
 					if (addresses.length > 0) {
-						setState(prev => ({
+						setState((prev) => ({
 							...prev,
-							properties: addresses
+							properties: addresses,
 						}));
 					}
 				}
@@ -132,24 +145,8 @@ function MainContent({ themeColor }: { themeColor: string }): ReactNode {
 			}
 		}
 	}, [state, setState]);
-	
+
 	// 🪁 Frontend Actions: https://docs.copilotkit.ai/coagents/frontend-actions
-	useCopilotAction({
-		name: "addProperty",
-		parameters: [
-			{
-				name: "property",
-				description: "The property to add. Make it witty, short and concise.",
-				required: true,
-			},
-		],
-		handler: ({ property }) => {
-			setState((prevState) => ({
-				...prevState,
-				properties: [...(prevState?.properties || []), property],
-			}));
-		},
-	});
 
 	//🪁 Generative UI: https://docs.copilotkit.ai/coagents/generative-ui
 	// useCopilotAction({
@@ -216,10 +213,14 @@ function MainContent({ themeColor }: { themeColor: string }): ReactNode {
 				<hr className="border-white/20 my-6" />
 				{state?.properties && state.properties.length > 0 && (
 					<div className="mb-6 p-4 bg-white/30 rounded-lg shadow">
-						<h2 className="text-xl font-semibold text-white mb-2">Found Properties</h2>
+						<h2 className="text-xl font-semibold text-white mb-2">
+							Found Properties
+						</h2>
 						<ul className="text-white/90 ml-4 list-disc">
 							{state.properties.map((property, index) => (
-								<li key={`property-${index}`} className="mb-1">{property}</li>
+								<li key={`property-${index}`} className="mb-1">
+									{property}
+								</li>
 							))}
 						</ul>
 					</div>
