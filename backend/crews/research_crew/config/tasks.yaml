@@ -50,3 +50,20 @@ render_report:
   output_file: output/property_list.json
   context:
     - property_search_task
+
+
+summarize_properties_task:
+  description: >
+    Summarize the following structured property and WalkScore data into a markdown summary.
+    The summary should:
+    - Start with a short headline
+    - Group each property with key details (price, size, agent, open houses)
+    - Show Walk Score, Transit Score, and Bike Score clearly
+    - Format it using Markdown, including inline images if available
+    - End with a short comparison or recommendation based on location, pricing, or walkability
+  expected_output: >
+    A markdown-formatted summary of properties with embedded photos and WalkScore insights.
+  agent: summarizer
+  context:
+    - property_search_task
+  output_file: output/property_summary.md
