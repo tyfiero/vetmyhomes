@@ -28,7 +28,7 @@ const Hero = () => {
 					<div className="flex justify-start mb-10">
 						<Link
 							href="/simple"
-							className="bg-sky-500 hover:bg-sky-600 text-white py-6 px-8 text-lg"
+							className="bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 text-lg flex items-center rounded-md"
 						>
 							Start Now
 							<ArrowRight className="ml-2" />

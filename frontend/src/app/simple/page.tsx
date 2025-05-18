@@ -65,9 +65,7 @@ export default function SimplePage() {
 	return (
 		<div className="container mx-auto p-4 min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white">
 			<header className="text-center my-8">
-				<h1 className="text-4xl font-bold text-sky-400">
-					Property Inquiry Assistant
-				</h1>
+				<h1 className="text-4xl font-bold text-sky-400">Vet My Homes Agent</h1>
 				<p className="text-slate-300 mt-2">
 					Enter your query below to find relevant properties.
 				</p>

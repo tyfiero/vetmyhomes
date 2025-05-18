@@ -5,12 +5,10 @@ const CallToAction = () => {
 	return (
 		<section className="py-20 relative overflow-hidden">
 			<div className="absolute inset-0 z-0">
-				<Image
+				<img
 					src="https://images.unsplash.com/photo-1580041065738-e72023775cdc?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0"
 					alt="Modern bright living room"
-					layout="fill"
-					objectFit="cover"
-					className="w-full h-full"
+					className="w-full h-full object-cover"
 				/>
 				<div className="absolute inset-0 bg-sky-900/80"></div>
 			</div>
